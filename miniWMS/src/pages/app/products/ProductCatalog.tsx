@@ -39,6 +39,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { StatsCard } from "@/components/cards/StatsCard";
 
 // ------------------------- Sample Data -------------------------
 
@@ -130,28 +131,6 @@ const statusMap = {
 };
 
 // ------------------------- Components -------------------------
-
-const StatsCard = ({
-  label,
-  value,
-  icon,
-  color,
-}: {
-  label: string;
-  value: number;
-  icon?: React.ReactNode;
-  color?: string;
-}) => (
-  <Card>
-    <CardContent className="flex items-center justify-between">
-      <div>
-        <p className="text-sm font-medium text-muted-foreground">{label}</p>
-        <p className={`text-2xl font-bold ${color}`}>{value}</p>
-      </div>
-      {icon}
-    </CardContent>
-  </Card>
-);
 
 const ProductActions = ({ id }: { id: string }) => (
   <DropdownMenu>

@@ -6,9 +6,11 @@ import HomeLayout from './layouts/home/HomeLayout'
 import Contact from './pages/Contact'
 import { DashBoard } from './pages/app/DashBoard'
 import AppLayout from './layouts/app/AppLayout'
-import ProductCatalog from './pages/app/ProductCatalog'
+import ProductCatalog from './pages/app/products/ProductCatalog'
 import AddProduct from './pages/app/products/AddProduct'
 import ProductLayout from './layouts/app/products/ProductLayout'
+import Categories from './pages/app/categories/Categories'
+import Suppliers from './pages/suppliers/Suppliers'
 function App() {
 
   return (
@@ -27,7 +29,9 @@ function App() {
               <Route index element={<ProductCatalog />} />
               <Route path="add" element={<AddProduct />} />
             </Route>
+            <Route path="categories" element={<Categories />} />
 
+            <Route path="suppliers" element={<Suppliers />} />
           </Route>
           {/* <Route path="*" element={<NotFound />} /> */}
         </Routes>
