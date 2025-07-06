@@ -1,7 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
-    MapPin,
     CalendarDays,
     CheckCircle,
     XCircle,
@@ -16,6 +15,8 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { StatsCard } from "@/components/cards/StatsCard";
 import { PageBreadcrumb } from "@/components/ui/page-breadcrumb";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ShelfGrid } from "@/components/ShelfGrid";
 
 const mockZones = [
     {
@@ -119,60 +120,140 @@ export default function ZoneDetail() {
                 />
             </div>
 
+            <Tabs defaultValue="info" className="mt-6">
+                <TabsList className="mb-4">
+                    <TabsTrigger value="info">Thông tin</TabsTrigger>
+                    <TabsTrigger value="shelves">Danh sách kệ</TabsTrigger>
+                    <TabsTrigger value="status">Trạng thái</TabsTrigger>
+                </TabsList>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>Thông tin khu vực</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <p className="text-sm text-muted-foreground">Mã khu vực</p>
-                            <p className="font-medium">{zone.code}</p>
-                        </div>
-                        <div>
-                            <p className="text-sm text-muted-foreground">Loại khu vực</p>
-                            <p className="font-medium">{zone.type}</p>
-                        </div>
-                        <div>
-                            <p className="text-sm text-muted-foreground">Vị trí</p>
-                            <p className="font-medium">{zone.location}</p>
-                        </div>
-                        <div>
-                            <p className="text-sm text-muted-foreground">Trạng thái</p>
-                            <Badge variant="outline" className={zone.status === "active" ? "text-green-600 border-green-300" : "text-red-600 border-red-300"}>
-                                {zone.status === "active" ? (
-                                    <span className="flex items-center gap-1">
-                                        <CheckCircle className="w-4 h-4" /> Hoạt động
-                                    </span>
-                                ) : (
-                                    <span className="flex items-center gap-1">
-                                        <XCircle className="w-4 h-4" /> Ngừng hoạt động
-                                    </span>
-                                )}
-                            </Badge>
-                        </div>
-                        <div className="md:col-span-2">
-                            <p className="text-sm text-muted-foreground">Mô tả</p>
-                            <p>{zone.description || "Không có mô tả"}</p>
-                        </div>
-                        <div>
-                            <p className="text-sm text-muted-foreground">Ngày tạo</p>
-                            <div className="flex items-center gap-2">
-                                <CalendarDays className="w-4 h-4 text-muted-foreground" />
-                                {zone.createdAt}
+                {/* --- Thông tin khu vực --- */}
+                <TabsContent value="info">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Thông tin khu vực</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <p className="text-sm text-muted-foreground">Mã khu vực</p>
+                                    <p className="font-medium">{zone.code}</p>
+                                </div>
+                                <div>
+                                    <p className="text-sm text-muted-foreground">Loại khu vực</p>
+                                    <p className="font-medium">{zone.type}</p>
+                                </div>
+                                <div>
+                                    <p className="text-sm text-muted-foreground">Vị trí</p>
+                                    <p className="font-medium">{zone.location}</p>
+                                </div>
+                                <div>
+                                    <p className="text-sm text-muted-foreground">Trạng thái</p>
+                                    <Badge
+                                        variant="outline"
+                                        className={
+                                            zone.status === "active"
+                                                ? "text-green-600 border-green-300"
+                                                : "text-red-600 border-red-300"
+                                        }
+                                    >
+                                        {zone.status === "active" ? (
+                                            <span className="flex items-center gap-1">
+                                                <CheckCircle className="w-4 h-4" /> Hoạt động
+                                            </span>
+                                        ) : (
+                                            <span className="flex items-center gap-1">
+                                                <XCircle className="w-4 h-4" /> Ngừng hoạt động
+                                            </span>
+                                        )}
+                                    </Badge>
+                                </div>
+                                <div className="md:col-span-2">
+                                    <p className="text-sm text-muted-foreground">Mô tả</p>
+                                    <p>{zone.description || "Không có mô tả"}</p>
+                                </div>
+                                <div>
+                                    <p className="text-sm text-muted-foreground">Ngày tạo</p>
+                                    <div className="flex items-center gap-2">
+                                        <CalendarDays className="w-4 h-4 text-muted-foreground" />
+                                        {zone.createdAt}
+                                    </div>
+                                </div>
+                                <div>
+                                    <p className="text-sm text-muted-foreground">Cập nhật lần cuối</p>
+                                    <div className="flex items-center gap-2">
+                                        <CalendarDays className="w-4 h-4 text-muted-foreground" />
+                                        {zone.updatedAt}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div>
-                            <p className="text-sm text-muted-foreground">Cập nhật lần cuối</p>
-                            <div className="flex items-center gap-2">
-                                <CalendarDays className="w-4 h-4 text-muted-foreground" />
-                                {zone.updatedAt}
-                            </div>
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                {/* --- Danh sách kệ --- */}
+                <TabsContent value="shelves">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Danh sách kệ trong khu vực</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            {1 > 0 ? (
+                                <ShelfGrid />
+                            ) : (
+                                <p className="text-muted-foreground text-sm">
+                                    Chưa có kệ nào trong khu vực này.
+                                </p>
+                            )}
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                {/* --- Lịch sử trạng thái --- */}
+                <TabsContent value="status">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Lịch sử trạng thái</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            {1 > 0 ? (
+                                <ul className="space-y-3">
+                                    {[{
+                                        date: "2024-05-01",
+                                        status: "active",
+                                    },
+                                    {
+                                        date: "2024-06-15",
+                                        status: "inactive",
+                                    },
+                                    {
+                                        date: "2024-07-01",
+                                        status: "active",
+                                    }].map((entry, idx) => (
+                                        <li key={idx} className="flex justify-between text-sm">
+                                            <span>{entry.date}</span>
+                                            <Badge
+                                                className={
+                                                    entry.status === "active"
+                                                        ? "text-green-600 border-green-300"
+                                                        : "text-red-600 border-red-300"
+                                                }
+                                                variant="outline"
+                                            >
+                                                {entry.status === "active" ? "Hoạt động" : "Ngừng hoạt động"}
+                                            </Badge>
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p className="text-muted-foreground text-sm">
+                                    Chưa có lịch sử trạng thái.
+                                </p>
+                            )}
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+            </Tabs>
         </div>
     );
 }
