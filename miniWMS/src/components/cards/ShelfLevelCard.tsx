@@ -14,7 +14,6 @@ import {
   XCircle,
   Pencil,
   Trash,
-  PlusCircle,
 } from "lucide-react";
 
 interface Props {
@@ -28,7 +27,6 @@ export default function ShelfLevelCard({
   level,
   onEdit,
   onDelete,
-  onAdd,
 }: Props) {
   const statusMap = {
     active: {

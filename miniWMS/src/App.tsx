@@ -18,6 +18,7 @@ import WarehouseDetail from './pages/app/warehouses/WarehouseDetail'
 import UserCatalog from './pages/app/users/UserCatalog'
 import AddUser from './pages/app/users/AddUser'
 import ZoneDetail from './pages/app/warehouses/zones/ZoneDetail'
+import Login from './pages/auth/Login'
 
 
 function App() {
@@ -28,6 +29,8 @@ function App() {
           <Route path="/" element={<HomeLayout />} >
             <Route index element={<Index />} />
             <Route path="contact" element={<Contact />} />
+            <Route path="login" element={<Login />} />
+
           </Route>
 
           <Route path="/app/" element={<AppLayout />} >
