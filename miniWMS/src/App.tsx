@@ -12,8 +12,10 @@ import ProductLayout from './layouts/app/products/ProductLayout'
 import Categories from './pages/app/categories/Categories'
 import Suppliers from './pages/app/suppliers/Suppliers'
 import AddSupplier from './pages/app/suppliers/AddSupplier'
-function App() {
+import WarehouseCatalog from './pages/app/warehouses/WarehouseCatalog'
 
+
+function App() {
   return (
     <TooltipProvider>
       <BrowserRouter>
@@ -34,6 +36,7 @@ function App() {
 
             <Route path="suppliers" element={<Suppliers />} />
             <Route path="suppliers/add" element={<AddSupplier />} />
+            <Route path='warehouses' element={<WarehouseCatalog />} />
 
           </Route>
           {/* <Route path="*" element={<NotFound />} /> */}

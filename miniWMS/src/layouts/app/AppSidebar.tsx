@@ -30,7 +30,7 @@ const NAV_ITEMS = [
     { name: "Dashboard", href: "", icon: BarChart3 },
     { name: "Sản phẩm", href: "products", icon: Package },
     { name: "Danh mục", href: "categories", icon: FolderOpen },
-    { name: "Vị trí kho", href: "locations", icon: MapPin },
+    { name: "Kho hàng", href: "warehouses", icon: MapPin },
     { name: "Nhập/Xuất", href: "inventory", icon: RefreshCw },
     { name: "Nhà cung cấp", href: "suppliers", icon: Users },
     { name: "Người dùng", href: "users", icon: UserCog },
