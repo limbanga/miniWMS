@@ -7,6 +7,8 @@ import Contact from './pages/Contact'
 import { DashBoard } from './pages/app/DashBoard'
 import AppLayout from './layouts/app/AppLayout'
 import ProductCatalog from './pages/app/ProductCatalog'
+import AddProduct from './pages/app/products/AddProduct'
+import ProductLayout from './layouts/app/products/ProductLayout'
 function App() {
 
   return (
@@ -15,11 +17,17 @@ function App() {
         <Routes>
           <Route path="/" element={<HomeLayout />} >
             <Route index element={<Index />} />
-            <Route path="/contact" element={<Contact />} />
+            <Route path="contact" element={<Contact />} />
           </Route>
-          <Route path="/app" element={<AppLayout />} >
+
+          <Route path="/app/" element={<AppLayout />} >
             <Route index element={<DashBoard />} />
-            <Route path="products" element={<ProductCatalog />} />
+
+            <Route path="products/" element={<ProductLayout />} >
+              <Route index element={<ProductCatalog />} />
+              <Route path="add" element={<AddProduct />} />
+            </Route>
+
           </Route>
           {/* <Route path="*" element={<NotFound />} /> */}
         </Routes>

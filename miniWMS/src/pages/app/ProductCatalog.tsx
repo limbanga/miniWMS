@@ -217,7 +217,7 @@ export default function ProductCatalog() {
             Quản lý và theo dõi tất cả sản phẩm trong kho
           </p>
         </div>
-        <Link to="/products/add">
+        <Link to="/app/products/add">
           <Button className="mt-4 sm:mt-0 bg-primary hover:bg-primary/90">
             <Plus className="w-4 h-4 mr-2" />
             Thêm sản phẩm
