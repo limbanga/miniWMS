@@ -12,6 +12,7 @@ import {
     FileText,
     Zap,
     LogOut,
+    Warehouse,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -30,7 +31,7 @@ const NAV_ITEMS = [
     { name: "Dashboard", href: "", icon: BarChart3 },
     { name: "Sản phẩm", href: "products", icon: Package },
     { name: "Danh mục", href: "categories", icon: FolderOpen },
-    { name: "Kho hàng", href: "warehouses", icon: MapPin },
+    { name: "Kho hàng", href: "warehouses", icon: Warehouse },
     { name: "Nhập/Xuất", href: "inventory", icon: RefreshCw },
     { name: "Nhà cung cấp", href: "suppliers", icon: Users },
     { name: "Người dùng", href: "users", icon: UserCog },

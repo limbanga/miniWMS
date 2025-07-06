@@ -148,7 +148,7 @@ export default function WarehouseCatalog() {
             Quản lý các kho hàng của hệ thống
           </p>
         </div>
-        <Link to="/warehouses/add">
+        <Link to="/app/warehouses/add">
           <Button className="mt-4 sm:mt-0 bg-primary hover:bg-primary/90">
             <Plus className="w-4 h-4 mr-2" />
             Thêm kho hàng

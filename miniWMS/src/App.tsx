@@ -13,6 +13,7 @@ import Categories from './pages/app/categories/Categories'
 import Suppliers from './pages/app/suppliers/Suppliers'
 import AddSupplier from './pages/app/suppliers/AddSupplier'
 import WarehouseCatalog from './pages/app/warehouses/WarehouseCatalog'
+import AddWarehouse from './pages/app/warehouses/AddWarehouse'
 
 
 function App() {
@@ -37,6 +38,8 @@ function App() {
             <Route path="suppliers" element={<Suppliers />} />
             <Route path="suppliers/add" element={<AddSupplier />} />
             <Route path='warehouses' element={<WarehouseCatalog />} />
+            <Route path="warehouses/add" element={<AddWarehouse />} />
+            {/* <Route path="warehouses/:id" element={<WarehouseDetail />} /> */}
 
           </Route>
           {/* <Route path="*" element={<NotFound />} /> */}
