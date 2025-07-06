@@ -1,99 +1,98 @@
-import { cn } from "@/lib/utils";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import type { ShelfLevel } from "@/data/types";
+import ShelfLevelCard from "./cards/ShelfLevelCard";
 
 const shelves = [
-    {
-        id: 1,
-        name: "Kệ A1",
+  {
+    id: "shelf-1",
+    name: "Kệ A1",
+    levels: [
+      {
+        id: "level-1-1",
+        shelfId: "shelf-1",
+        levelNumber: 1,
         capacity: 100,
-        levels: 3,
-    },
-    {
-        id: 2,
-        name: "Kệ A2",
-        capacity: 200,
-        levels: 3,
-    },
-    {
-        id: 3,
-        name: "Kệ A3",
-        capacity: 150,
-        levels: 3,
-    },
-    {
-        id: 4,
-        name: "Kệ B1",
+        currentStock: 60,
+        status: "active",
+      },
+      {
+        id: "level-1-2",
+        shelfId: "shelf-1",
+        levelNumber: 2,
+        capacity: 100,
+        currentStock: 20,
+        status: "maintenance",
+      },
+      {
+        id: "level-1-3",
+        shelfId: "shelf-1",
+        levelNumber: 3,
+        capacity: 100,
+        currentStock: 0,
+        status: "inactive",
+      },
+    ] satisfies ShelfLevel[],
+  },
+  {
+    id: "shelf-2",
+    name: "Kệ A2",
+    levels: [
+      {
+        id: "level-2-1",
+        shelfId: "shelf-2",
+        levelNumber: 1,
+        capacity: 80,
+        currentStock: 40,
+        status: "active",
+      },
+      {
+        id: "level-2-2",
+        shelfId: "shelf-2",
+        levelNumber: 2,
+        capacity: 80,
+        currentStock: 60,
+        status: "active",
+      },
+    ] satisfies ShelfLevel[],
+  },
+  {
+    id: "shelf-3",
+    name: "Kệ A3",
+    levels: [
+      {
+        id: "level-3-1",
+        shelfId: "shelf-3",
+        levelNumber: 1,
         capacity: 120,
-        levels: 2,
-    },
-    {
-        id: 5,
-        name: "Kệ B2",
-        capacity: 180,
-        levels: 4,
-    },
-    {
-        id: 6,
-        name: "Kệ B3",
-        capacity: 160,
-        levels: 2,
-    },
-    {
-        id: 7,
-        name: "Kệ C1",
-        capacity: 140,
-        levels: 3,
-    },
-    {
-        id: 8,
-        name: "Kệ C2",
-        capacity: 100,
-        levels: 2,
-    },
+        currentStock: 90,
+        status: "active",
+      },
+    ] satisfies ShelfLevel[],
+  },
 ];
 
 export function ShelfGrid() {
-  const maxLevels = Math.max(...shelves.map((s) => s.levels));
-  const shelfCount = shelves.length;
-
   return (
-    <div className="space-y-4">
-      {/* Header: Tên kệ */}
-      <div
-        className="grid gap-2"
-        style={{ gridTemplateColumns: `repeat(${shelfCount}, minmax(0, 1fr))` }}
-      >
+    <Tabs defaultValue={shelves[0].id} className="space-y-4">
+      <TabsList className="flex flex-wrap gap-2">
         {shelves.map((shelf) => (
-          <div
-            key={shelf.id}
-            className="text-center font-semibold text-primary"
-          >
+          <TabsTrigger key={shelf.id} value={shelf.id}>
             {shelf.name}
-          </div>
+          </TabsTrigger>
         ))}
-      </div>
+      </TabsList>
 
-      {/* Rows: Các tầng */}
-      {Array.from({ length: maxLevels }).map((_, levelIdx) => (
-        <div
-          key={levelIdx}
-          className="grid gap-2"
-          style={{ gridTemplateColumns: `repeat(${shelfCount}, minmax(0, 1fr))` }}
-        >
-          {shelves.map((shelf) => (
-            <div
-              key={`${shelf.id}-${levelIdx}`}
-              className={cn(
-                "border rounded-md py-3 text-center text-sm",
-                shelf.levels > levelIdx
-                  ? "bg-muted"
-                  : "bg-gray-100 text-gray-400 line-through"
-              )}
-            >
-              {shelf.levels > levelIdx ? `Tầng ${levelIdx + 1}` : "Không có"}
-            </div>
-          ))}
-        </div>
+      {shelves.map((shelf) => (
+        <TabsContent key={shelf.id} value={shelf.id}>
+          <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {shelf.levels
+              .sort((a, b) => a.levelNumber - b.levelNumber)
+              .map((level) => (
+                <ShelfLevelCard key={level.id} level={level} />
+              ))}
+          </div>
+        </TabsContent>
       ))}
-    </div>
+    </Tabs>
   );
 }
