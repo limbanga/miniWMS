@@ -81,7 +81,7 @@ function AppSidebar() {
                     </Button>
                 </div>
                 <Separator />
-                <ScrollArea className="flex-1">
+                <ScrollArea className="flex">
                     <SidebarContent collapsed={collapsed} />
                 </ScrollArea>
                 <Separator />

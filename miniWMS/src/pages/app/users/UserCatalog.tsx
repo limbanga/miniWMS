@@ -141,7 +141,7 @@ export default function UserCatalog() {
             Quản lý người dùng hệ thống và vai trò của họ
           </p>
         </div>
-        <Link to="/users/add">
+        <Link to="/app/users/add">
           <Button className="mt-4 sm:mt-0 bg-primary hover:bg-primary/90">
             <Plus className="w-4 h-4 mr-2" />
             Thêm người dùng
