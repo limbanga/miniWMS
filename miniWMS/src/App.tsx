@@ -10,7 +10,8 @@ import ProductCatalog from './pages/app/products/ProductCatalog'
 import AddProduct from './pages/app/products/AddProduct'
 import ProductLayout from './layouts/app/products/ProductLayout'
 import Categories from './pages/app/categories/Categories'
-import Suppliers from './pages/suppliers/Suppliers'
+import Suppliers from './pages/app/suppliers/Suppliers'
+import AddSupplier from './pages/app/suppliers/AddSupplier'
 function App() {
 
   return (
@@ -32,6 +33,8 @@ function App() {
             <Route path="categories" element={<Categories />} />
 
             <Route path="suppliers" element={<Suppliers />} />
+            <Route path="suppliers/add" element={<AddSupplier />} />
+
           </Route>
           {/* <Route path="*" element={<NotFound />} /> */}
         </Routes>

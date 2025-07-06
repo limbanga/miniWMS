@@ -1,43 +1,11 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-    Users,
-    Search,
-    Plus,
-    MoreHorizontal,
-    Edit,
-    Trash2,
-    Phone,
-    Mail,
-    MapPin,
-    Filter,
-    Download,
-    Eye,
-    Package,
-} from "lucide-react";
 import { Link } from "react-router-dom";
 import SupplierTable from "@/components/tables/SupplierTable";
 import { FilterBar } from "@/components/FilterBar";
 import { StatsCard } from "@/components/cards/StatsCard";
+import { Package, Plus, Users } from "lucide-react";
 
 interface Supplier {
     id: string;
@@ -135,33 +103,6 @@ const sampleSuppliers: Supplier[] = [
         notes: "Tạm ngưng hợp tác",
     },
 ];
-
-const getStatusColor = (status: Supplier["status"]) => {
-    switch (status) {
-        case "active":
-            return "bg-green-100 text-green-800 border-green-200";
-        case "pending":
-            return "bg-yellow-100 text-yellow-800 border-yellow-200";
-        case "inactive":
-            return "bg-red-100 text-red-800 border-red-200";
-        default:
-            return "bg-gray-100 text-gray-800 border-gray-200";
-    }
-};
-
-const getStatusText = (status: Supplier["status"]) => {
-    switch (status) {
-        case "active":
-            return "Hoạt động";
-        case "pending":
-            return "Chờ duyệt";
-        case "inactive":
-            return "Không hoạt động";
-        default:
-            return status;
-    }
-};
-
 export default function Suppliers() {
     const [searchTerm, setSearchTerm] = useState("");
     const [suppliers] = useState<Supplier[]>(sampleSuppliers);
@@ -197,7 +138,7 @@ export default function Suppliers() {
                             </p>
                         </div>
                         <div className="mt-4 sm:mt-0">
-                            <Link to="/suppliers/add">
+                            <Link to="/app/suppliers/add">
                                 <Button className="bg-primary hover:bg-primary/90">
                                     <Plus className="w-4 h-4 mr-2" />
                                     Thêm nhà cung cấp
