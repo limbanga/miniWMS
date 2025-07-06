@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import clsx from "clsx";
 
 const shelves = [
     {

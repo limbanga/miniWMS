@@ -7,6 +7,9 @@ import {
     Plus,
     LandPlot,
     Layers,
+    Thermometer,
+    Activity,
+    Eye,
 } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -122,9 +125,9 @@ export default function ZoneDetail() {
 
             <Tabs defaultValue="info" className="mt-6">
                 <TabsList className="mb-4">
-                    <TabsTrigger value="info">Thông tin</TabsTrigger>
+                    <TabsTrigger value="info">Thông tin khu vực</TabsTrigger>
                     <TabsTrigger value="shelves">Danh sách kệ</TabsTrigger>
-                    <TabsTrigger value="status">Trạng thái</TabsTrigger>
+                    <TabsTrigger value="monitoring">Giám sát</TabsTrigger>
                 </TabsList>
 
                 {/* --- Thông tin khu vực --- */}
@@ -209,50 +212,73 @@ export default function ZoneDetail() {
                     </Card>
                 </TabsContent>
 
-                {/* --- Lịch sử trạng thái --- */}
-                <TabsContent value="status">
+                <TabsContent value="monitoring">
                     <Card>
-                        <CardHeader>
-                            <CardTitle>Lịch sử trạng thái</CardTitle>
+                        <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                            <div>
+                                <CardTitle>Giám sát khu vực</CardTitle>
+                                <p className="text-sm text-muted-foreground">
+                                    Theo dõi nhiệt độ, độ ẩm và trạng thái khu vực.
+                                </p>
+                            </div>
+                            <Button variant="outline" onClick={() => alert("Xem camera trực tiếp")}>
+                                <Eye className="w-4 h-4 mr-2" />
+                                Camera trực tiếp
+                            </Button>
                         </CardHeader>
-                        <CardContent>
-                            {1 > 0 ? (
+
+                        <CardContent className="space-y-6">
+                            {/* Thông số môi trường hiện tại */}
+                            <div className="grid grid-cols-2 gap-6">
+                                <div className="flex items-center space-x-4">
+                                    <div className="bg-red-100 text-red-600 p-3 rounded-full">
+                                        <Thermometer className="w-5 h-5" />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-muted-foreground">Nhiệt độ</p>
+                                        <p className="text-lg font-semibold">26.5°C</p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center space-x-4">
+                                    <div className="bg-blue-100 text-blue-600 p-3 rounded-full">
+                                        <Activity className="w-5 h-5" />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm text-muted-foreground">Độ ẩm</p>
+                                        <p className="text-lg font-semibold">68%</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Lịch sử trạng thái */}
+                            <div>
+                                <p className="text-sm font-medium mb-2">Lịch sử hoạt động</p>
                                 <ul className="space-y-3">
-                                    {[{
-                                        date: "2024-05-01",
-                                        status: "active",
-                                    },
-                                    {
-                                        date: "2024-06-15",
-                                        status: "inactive",
-                                    },
-                                    {
-                                        date: "2024-07-01",
-                                        status: "active",
-                                    }].map((entry, idx) => (
+                                    {[
+                                        { date: "2024-05-01", status: "active" },
+                                        { date: "2024-06-15", status: "inactive" },
+                                        { date: "2024-07-01", status: "active" },
+                                    ].map((entry, idx) => (
                                         <li key={idx} className="flex justify-between text-sm">
                                             <span>{entry.date}</span>
                                             <Badge
+                                                variant="outline"
                                                 className={
                                                     entry.status === "active"
                                                         ? "text-green-600 border-green-300"
                                                         : "text-red-600 border-red-300"
                                                 }
-                                                variant="outline"
                                             >
                                                 {entry.status === "active" ? "Hoạt động" : "Ngừng hoạt động"}
                                             </Badge>
                                         </li>
                                     ))}
                                 </ul>
-                            ) : (
-                                <p className="text-muted-foreground text-sm">
-                                    Chưa có lịch sử trạng thái.
-                                </p>
-                            )}
+                            </div>
                         </CardContent>
                     </Card>
                 </TabsContent>
+
             </Tabs>
         </div>
     );
