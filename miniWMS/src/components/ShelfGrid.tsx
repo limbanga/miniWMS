@@ -1,6 +1,8 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { ShelfLevel } from "@/data/types";
 import ShelfLevelCard from "./cards/ShelfLevelCard";
+import { Button } from "./ui/button";
+import { PlusCircle } from "lucide-react";
 
 const shelves = [
   {
@@ -84,6 +86,48 @@ export function ShelfGrid() {
 
       {shelves.map((shelf) => (
         <TabsContent key={shelf.id} value={shelf.id}>
+          {/* Tổng quan kệ */}
+          <div className="mb-4 border rounded-md p-4 bg-muted/40">
+            <h3 className="text-lg font-semibold mb-2">{shelf.name}</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+              <div>
+                <p className="text-muted-foreground">Tổng số tầng</p>
+                <p className="font-medium">{shelf.levels.length}</p>
+              </div>
+              <div>
+                <p className="text-muted-foreground">Sức chứa tối đa</p>
+                <p className="font-medium">
+                  {shelf.levels.reduce((acc, lv) => acc + lv.capacity, 0)}
+                </p>
+              </div>
+              <div>
+                <p className="text-muted-foreground">Đã sử dụng</p>
+                <p className="font-medium">
+                  {shelf.levels.reduce((acc, lv) => acc + lv.currentStock, 0)}
+                </p>
+              </div>
+              <div>
+                <p className="text-muted-foreground">Còn trống</p>
+                <p className="font-medium">
+                  {shelf.levels.reduce((acc, lv) => acc + lv.capacity - lv.currentStock, 0)}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Nút thêm tầng */}
+          <div className="text-end mb-2">
+            <Button
+              size="sm"
+              onClick={() => alert(`Thêm tầng mới cho ${shelf.name}`)}
+              title="Thêm tầng mới"
+            >
+              <PlusCircle className="w-4 h-4 mr-1" />
+              Thêm tầng mới
+            </Button>
+          </div>
+
+          {/* Danh sách tầng */}
           <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {shelf.levels
               .sort((a, b) => a.levelNumber - b.levelNumber)
@@ -92,6 +136,7 @@ export function ShelfGrid() {
               ))}
           </div>
         </TabsContent>
+
       ))}
     </Tabs>
   );

@@ -197,8 +197,17 @@ export default function ZoneDetail() {
                 {/* --- Danh sách kệ --- */}
                 <TabsContent value="shelves">
                     <Card>
-                        <CardHeader>
-                            <CardTitle>Danh sách kệ trong khu vực</CardTitle>
+                        <CardHeader className="flex items-center justify-between">
+                            <CardTitle>
+                                Danh sách kệ trong khu vực
+                            </CardTitle>
+                            <Button
+                                onClick={() => alert("Thêm kệ mới")}
+                            >
+                                <Plus className="w-4 h-4 mr-2" />
+                                Thêm kệ mới
+                            </Button>
+
                         </CardHeader>
                         <CardContent>
                             {1 > 0 ? (
