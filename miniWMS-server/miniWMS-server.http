@@ -1,0 +1,6 @@
+@miniWMS_server_HostAddress = http://localhost:5182
+
+GET {{miniWMS_server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
