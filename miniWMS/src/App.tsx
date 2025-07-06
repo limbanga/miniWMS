@@ -6,6 +6,7 @@ import HomeLayout from './layouts/home/HomeLayout'
 import Contact from './pages/Contact'
 import { DashBoard } from './pages/app/DashBoard'
 import AppLayout from './layouts/app/AppLayout'
+import ProductCatalog from './pages/app/ProductCatalog'
 function App() {
 
   return (
@@ -18,6 +19,7 @@ function App() {
           </Route>
           <Route path="/app" element={<AppLayout />} >
             <Route index element={<DashBoard />} />
+            <Route path="products" element={<ProductCatalog />} />
           </Route>
           {/* <Route path="*" element={<NotFound />} /> */}
         </Routes>

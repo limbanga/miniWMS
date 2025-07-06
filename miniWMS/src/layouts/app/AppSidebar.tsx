@@ -59,7 +59,7 @@ function AppSidebar() {
             {/* Desktop Sidebar */}
             <aside
                 className={cn(
-                    "hidden lg:flex flex-col h-screen border-r bg-muted/40 transition-all",
+                    "hidden lg:flex flex-col min-h-screen border-r bg-muted/40 transition-all",
                     collapsed ? "w-16" : "w-64"
                 )}
             >
