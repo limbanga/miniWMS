@@ -1,212 +1,304 @@
 import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Activity,
-  AlertTriangle,
-  BarChart3,
-  Building,
-  Calendar,
-  CheckCircle,
-  Clock,
-  CreditCard,
-  DollarSign,
-  MapPin,
-  Package,
-  PieChart,
-  Settings,
-  ShoppingCart,
-  TrendingUp,
-  TrendingDown,
-  Users,
+  ArrowLeft,
+  Edit,
   Warehouse,
-  Zap,
-  Target,
-  Truck,
-  ClipboardList,
+  MapPin,
+  Building,
   Thermometer,
   Shield,
+  Package,
+  Users,
+  AlertTriangle,
+  CheckCircle,
+  Calendar,
+  Phone,
+  Mail,
+  Activity,
+  TrendingUp,
+  BarChart3,
   Eye,
-  ArrowRight,
-  RefreshCw,
-  Bell,
-  Search,
+  Settings,
+  Download,
+  Share2,
+  Printer,
+  ExternalLink,
 } from "lucide-react";
-import { Link } from "react-router-dom";
 
-// Real-time warehouse data simulation
-const useWarehouseData = () => {
-  const [data, setData] = useState({
-    overview: {
-      totalCapacity: 50000,
-      currentStock: 32150,
-      availableSpace: 17850,
-      utilizationRate: 64.3,
-      totalProducts: 1247,
-      activeOrders: 89,
-      pendingShipments: 23,
-      alerts: 5,
-    },
-    zones: [
-      {
-        id: "A",
-        name: "Zone A",
-        type: "Điện tử",
-        capacity: 15000,
-        current: 12300,
-        temperature: 22,
-        humidity: 45,
-        status: "normal",
-        lastActivity: "5 phút trước",
-      },
-      {
-        id: "B",
-        name: "Zone B",
-        type: "Văn phòng phẩm",
-        capacity: 12000,
-        current: 8900,
-        temperature: 24,
-        humidity: 50,
-        status: "normal",
-        lastActivity: "12 phút trước",
-      },
-      {
-        id: "C",
-        name: "Zone C",
-        type: "Thực phẩm",
-        capacity: 10000,
-        current: 6800,
-        temperature: 4,
-        humidity: 80,
-        status: "cold",
-        lastActivity: "2 phút trước",
-      },
-      {
-        id: "D",
-        name: "Zone D",
-        type: "Hóa chất",
-        capacity: 8000,
-        current: 4150,
-        temperature: 18,
-        humidity: 35,
-        status: "hazmat",
-        lastActivity: "8 phút trước",
-      },
-    ],
-    activities: [
-      {
-        id: 1,
-        type: "inbound",
-        title: "Nhập kho",
-        description: "Nhận 500 sản phẩm từ Samsung",
-        zone: "Zone A",
-        time: "2 phút trước",
-        status: "completed",
-      },
-      {
-        id: 2,
-        type: "outbound",
-        title: "Xuất kho",
-        description: "Giao 120 sản phẩm đơn hàng #12345",
-        zone: "Zone B",
-        time: "5 phút trước",
-        status: "processing",
-      },
-      {
-        id: 3,
-        type: "picking",
-        title: "Picking",
-        description: "Đang lấy hàng cho 3 đơn hàng",
-        zone: "Zone A",
-        time: "8 phút trước",
-        status: "processing",
-      },
-      {
-        id: 4,
-        type: "maintenance",
-        title: "Bảo trì",
-        description: "Kiểm tra hệ thống làm lạnh Zone C",
-        zone: "Zone C",
-        time: "15 phút trước",
-        status: "scheduled",
-      },
-    ],
-    performance: {
-      today: {
-        inbound: 12,
-        outbound: 18,
-        picking: 156,
-        putaway: 142,
-        accuracy: 99.2,
-        efficiency: 87.5,
-      },
-      thisWeek: {
-        orders: 234,
-        shipments: 189,
-        returns: 12,
-        satisfaction: 96.8,
-      },
-    },
-    alerts: [
-      {
-        id: 1,
-        type: "critical",
-        message: "Zone C nhiệt độ vượt ngưỡng (6°C)",
-        time: "3 phút trước",
-      },
-      {
-        id: 2,
-        type: "warning",
-        message: "Sắp hết vị trí trong Zone A (95% đầy)",
-        time: "10 phút trước",
-      },
-      {
-        id: 3,
-        type: "info",
-        message: "Đơn hàng #12347 sẵn sàng xuất kho",
-        time: "15 phút trước",
-      },
-    ],
-  });
+interface WarehouseData {
+  id: string;
+  name: string;
+  code: string;
+  type: string;
+  status: string;
+  address: string;
+  city: string;
+  district: string;
+  ward: string;
+  country: string;
+  postalCode: string;
+  latitude: string;
+  longitude: string;
+  totalArea: number;
+  storageArea: number;
+  capacity: number;
+  currentStock: number;
+  height: number;
+  loadingDocks: number;
+  hasClimateControl: boolean;
+  hasSecurity: boolean;
+  hasFireSuppression: boolean;
+  operatingHours: {
+    start: string;
+    end: string;
+    weekends: boolean;
+  };
+  manager: string;
+  managerPhone: string;
+  managerEmail: string;
+  emergencyContact: string;
+  description: string;
+  notes: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
-  // Simulate real-time updates
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setData((prev) => ({
-        ...prev,
-        overview: {
-          ...prev.overview,
-          currentStock:
-            prev.overview.currentStock + Math.floor(Math.random() * 20) - 10,
-          activeOrders:
-            prev.overview.activeOrders + Math.floor(Math.random() * 4) - 2,
-        },
-      }));
-    }, 30000);
+interface ZoneData {
+  id: string;
+  name: string;
+  type: string;
+  capacity: number;
+  currentStock: number;
+  temperature: number;
+  humidity: number;
+  status: "active" | "inactive" | "maintenance";
+  lastActivity: string;
+}
 
-    return () => clearInterval(interval);
-  }, []);
+interface ActivityData {
+  id: string;
+  type: "inbound" | "outbound" | "transfer" | "maintenance";
+  description: string;
+  zone: string;
+  quantity: number;
+  timestamp: string;
+  status: "completed" | "processing" | "scheduled";
+}
 
-  return data;
-};
+interface PerformanceData {
+  today: {
+    inbound: number;
+    outbound: number;
+    transfers: number;
+    efficiency: number;
+  };
+  thisWeek: {
+    totalOrders: number;
+    completedOrders: number;
+    accuracy: number;
+    utilization: number;
+  };
+  thisMonth: {
+    throughput: number;
+    avgProcessingTime: number;
+    customerSatisfaction: number;
+    costPerUnit: number;
+  };
+}
+
+// Sample data
+const getSampleWarehouse = (id: string): WarehouseData => ({
+  id,
+  name: "Kho Hà Nội 1",
+  code: "HN01",
+  type: "distribution",
+  status: "active",
+  address: "123 Đường Giải Phóng",
+  city: "Hà N��i",
+  district: "Hoàng Mai",
+  ward: "Hoàng Văn Thụ",
+  country: "Vietnam",
+  postalCode: "100000",
+  latitude: "21.0285",
+  longitude: "105.8542",
+  totalArea: 15000,
+  storageArea: 12000,
+  capacity: 100000,
+  currentStock: 75500,
+  height: 12,
+  loadingDocks: 8,
+  hasClimateControl: true,
+  hasSecurity: true,
+  hasFireSuppression: true,
+  operatingHours: {
+    start: "08:00",
+    end: "18:00",
+    weekends: false,
+  },
+  manager: "Nguyễn Văn A",
+  managerPhone: "0123456789",
+  managerEmail: "manager@example.com",
+  emergencyContact: "0987654321",
+  description: "Kho phân phối chính tại Hà Nội",
+  notes: "Kho được trang bị đầy đủ hệ thống an ninh và chữa cháy",
+  createdAt: "2024-01-01",
+  updatedAt: "2024-01-15",
+});
+
+const getSampleZones = (): ZoneData[] => [
+  {
+    id: "1",
+    name: "Zone A",
+    type: "Điện tử",
+    capacity: 25000,
+    currentStock: 18500,
+    temperature: 22,
+    humidity: 45,
+    status: "active",
+    lastActivity: "5 phút trước",
+  },
+  {
+    id: "2",
+    name: "Zone B",
+    type: "Văn phòng phẩm",
+    capacity: 30000,
+    currentStock: 22000,
+    temperature: 24,
+    humidity: 50,
+    status: "active",
+    lastActivity: "12 phút trước",
+  },
+  {
+    id: "3",
+    name: "Zone C",
+    type: "Thực phẩm",
+    capacity: 15000,
+    currentStock: 8500,
+    temperature: 4,
+    humidity: 80,
+    status: "maintenance",
+    lastActivity: "2 phút trước",
+  },
+  {
+    id: "4",
+    name: "Zone D",
+    type: "Hóa chất",
+    capacity: 30000,
+    currentStock: 26500,
+    temperature: 18,
+    humidity: 35,
+    status: "active",
+    lastActivity: "8 phút trước",
+  },
+];
+
+const getSampleActivities = (): ActivityData[] => [
+  {
+    id: "1",
+    type: "inbound",
+    description: "Nhập 500 sản phẩm từ Samsung",
+    zone: "Zone A",
+    quantity: 500,
+    timestamp: "2024-01-15 14:30",
+    status: "completed",
+  },
+  {
+    id: "2",
+    type: "outbound",
+    description: "Xuất 120 sản phẩm đơn hàng #12345",
+    zone: "Zone B",
+    quantity: 120,
+    timestamp: "2024-01-15 14:15",
+    status: "processing",
+  },
+  {
+    id: "3",
+    type: "transfer",
+    description: "Chuyển hàng giữa Zone A và Zone B",
+    zone: "Zone A → Zone B",
+    quantity: 75,
+    timestamp: "2024-01-15 13:45",
+    status: "completed",
+  },
+  {
+    id: "4",
+    type: "maintenance",
+    description: "Kiểm tra hệ thống làm lạnh",
+    zone: "Zone C",
+    quantity: 0,
+    timestamp: "2024-01-15 13:00",
+    status: "scheduled",
+  },
+];
+
+const getSamplePerformance = (): PerformanceData => ({
+  today: {
+    inbound: 12,
+    outbound: 18,
+    transfers: 5,
+    efficiency: 87.5,
+  },
+  thisWeek: {
+    totalOrders: 156,
+    completedOrders: 149,
+    accuracy: 99.2,
+    utilization: 75.5,
+  },
+  thisMonth: {
+    throughput: 2450,
+    avgProcessingTime: 24.5,
+    customerSatisfaction: 96.8,
+    costPerUnit: 2.35,
+  },
+});
 
 export default function WarehouseDetail() {
-  const data = useWarehouseData();
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const [warehouse, setWarehouse] = useState<WarehouseData | null>(null);
+  const [zones, setZones] = useState<ZoneData[]>([]);
+  const [activities, setActivities] = useState<ActivityData[]>([]);
+  const [performance, setPerformance] = useState<PerformanceData | null>(null);
   const [selectedTab, setSelectedTab] = useState("overview");
 
-  const getZoneStatusColor = (status: string) => {
+  useEffect(() => {
+    if (id) {
+      setWarehouse(getSampleWarehouse(id));
+      setZones(getSampleZones());
+      setActivities(getSampleActivities());
+      setPerformance(getSamplePerformance());
+    }
+  }, [id]);
+
+  const getStatusColor = (status: string) => {
     switch (status) {
-      case "normal":
+      case "active":
         return "bg-green-100 text-green-800 border-green-200";
-      case "cold":
-        return "bg-blue-100 text-blue-800 border-blue-200";
-      case "hazmat":
-        return "bg-orange-100 text-orange-800 border-orange-200";
+      case "inactive":
+        return "bg-gray-100 text-gray-800 border-gray-200";
+      case "maintenance":
+        return "bg-yellow-100 text-yellow-800 border-yellow-200";
       default:
         return "bg-gray-100 text-gray-800 border-gray-200";
+    }
+  };
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case "active":
+        return "Hoạt động";
+      case "inactive":
+        return "Tạm dừng";
+      case "maintenance":
+        return "Bảo trì";
+      default:
+        return status;
     }
   };
 
@@ -215,9 +307,9 @@ export default function WarehouseDetail() {
       case "inbound":
         return <Package className="w-4 h-4 text-green-600" />;
       case "outbound":
-        return <Truck className="w-4 h-4 text-blue-600" />;
-      case "picking":
-        return <ClipboardList className="w-4 h-4 text-purple-600" />;
+        return <Package className="w-4 h-4 text-blue-600" />;
+      case "transfer":
+        return <Activity className="w-4 h-4 text-purple-600" />;
       case "maintenance":
         return <Settings className="w-4 h-4 text-orange-600" />;
       default:
@@ -238,46 +330,83 @@ export default function WarehouseDetail() {
     }
   };
 
-  const getAlertColor = (type: string) => {
-    switch (type) {
-      case "critical":
-        return "border-l-red-500 bg-red-50";
-      case "warning":
-        return "border-l-yellow-500 bg-yellow-50";
-      case "info":
-        return "border-l-blue-500 bg-blue-50";
-      default:
-        return "border-l-gray-500 bg-gray-50";
-    }
-  };
+  if (!warehouse) {
+    return (
+      <>
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+            <p>Đang tải thông tin kho...</p>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  const utilizationRate = (warehouse.currentStock / warehouse.capacity) * 100;
 
   return (
     <>
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-8">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center mb-4">
+            <Button
+              variant="ghost"
+              onClick={() => navigate("/warehouse")}
+              className="mr-4"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Quay lại
+            </Button>
+            <div className="flex items-center text-sm text-muted-foreground">
+              <Warehouse className="w-4 h-4 mr-1" />
+              <span>Quản lý kho</span>
+              <span className="mx-2">/</span>
+              <span className="text-foreground font-medium">Chi tiết kho</span>
+            </div>
+          </div>
+
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
             <div>
               <h1 className="text-3xl font-bold text-foreground flex items-center">
-                <Warehouse className="w-8 h-8 mr-3 text-primary" />
-                Quản lý Kho
+                <Building className="w-8 h-8 mr-3 text-primary" />
+                {warehouse.name}
               </h1>
-              <p className="text-muted-foreground mt-2">
-                Giám sát và quản lý hoạt động kho hàng theo thời gian thực
-              </p>
+              <div className="flex flex-wrap items-center gap-4 mt-2">
+                <Badge
+                  variant="outline"
+                  className={getStatusColor(warehouse.status)}
+                >
+                  {getStatusText(warehouse.status)}
+                </Badge>
+                <span className="text-sm text-muted-foreground">
+                  Mã kho: {warehouse.code}
+                </span>
+                <span className="text-sm text-muted-foreground">
+                  Cập nhật: {warehouse.updatedAt}
+                </span>
+                <span className="text-sm text-muted-foreground">
+                  Tạo: {warehouse.createdAt}
+                </span>
+              </div>
             </div>
-            <div className="mt-4 sm:mt-0 flex gap-2">
-              <Button variant="outline">
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Làm mới
+            <div className="flex flex-wrap gap-2 mt-4 lg:mt-0">
+              <Button variant="outline" size="sm">
+                <Download className="w-4 h-4 mr-2" />
+                Xuất báo cáo
               </Button>
-              <Button variant="outline">
-                <Settings className="w-4 h-4 mr-2" />
-                Cài đặt
+              <Button variant="outline" size="sm">
+                <Share2 className="w-4 h-4 mr-2" />
+                Chia sẻ
               </Button>
-              <Button>
-                <Bell className="w-4 h-4 mr-2" />
-                Cảnh báo ({data.overview.alerts})
+              <Button variant="outline" size="sm">
+                <Printer className="w-4 h-4 mr-2" />
+                In
+              </Button>
+              <Button onClick={() => navigate(`/warehouse/edit/${id}`)}>
+                <Edit className="w-4 h-4 mr-2" />
+                Chỉnh sửa
               </Button>
             </div>
           </div>
@@ -286,14 +415,14 @@ export default function WarehouseDetail() {
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card>
-            <CardContent className="p-6">
+            <CardContent >
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">
                     Tỷ lệ sử dụng
                   </p>
                   <p className="text-2xl font-bold">
-                    {data.overview.utilizationRate}%
+                    {utilizationRate.toFixed(1)}%
                   </p>
                   <p className="text-xs text-green-600 flex items-center mt-1">
                     <TrendingUp className="w-3 h-3 mr-1" />
@@ -302,71 +431,67 @@ export default function WarehouseDetail() {
                 </div>
                 <div className="text-right">
                   <BarChart3 className="w-8 h-8 text-primary mb-2" />
-                  <Progress
-                    value={data.overview.utilizationRate}
-                    className="h-2 w-16"
-                  />
+                  <Progress value={utilizationRate} className="h-2 w-16" />
                 </div>
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardContent className="p-6">
+            <CardContent >
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">
-                    Đơn hàng hoạt động
+                    Sức chứa
                   </p>
                   <p className="text-2xl font-bold">
-                    {data.overview.activeOrders}
+                    {warehouse.capacity.toLocaleString()}
                   </p>
                   <p className="text-xs text-blue-600 flex items-center mt-1">
-                    <Clock className="w-3 h-3 mr-1" />
-                    23 chờ xử lý
+                    <Package className="w-3 h-3 mr-1" />
+                    {warehouse.currentStock.toLocaleString()} đang lưu trữ
                   </p>
                 </div>
-                <ShoppingCart className="w-8 h-8 text-blue-600" />
+                <Package className="w-8 h-8 text-blue-600" />
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardContent className="p-6">
+            <CardContent >
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">
-                    Tổng sản phẩm
+                    Diện tích
                   </p>
                   <p className="text-2xl font-bold">
-                    {data.overview.totalProducts.toLocaleString()}
+                    {warehouse.totalArea.toLocaleString()}m²
                   </p>
                   <p className="text-xs text-purple-600 flex items-center mt-1">
-                    <Package className="w-3 h-3 mr-1" />
-                    {data.overview.currentStock.toLocaleString()} trong kho
+                    <Building className="w-3 h-3 mr-1" />
+                    {warehouse.storageArea.toLocaleString()}m² lưu trữ
                   </p>
                 </div>
-                <Package className="w-8 h-8 text-purple-600" />
+                <Building className="w-8 h-8 text-purple-600" />
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardContent className="p-6">
+            <CardContent >
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">
-                    Hiệu suất hôm nay
+                    Khu vực
                   </p>
-                  <p className="text-2xl font-bold">
-                    {data.performance.today.efficiency}%
-                  </p>
+                  <p className="text-2xl font-bold">{zones.length}</p>
                   <p className="text-xs text-green-600 flex items-center mt-1">
-                    <Target className="w-3 h-3 mr-1" />
-                    Độ chính xác {data.performance.today.accuracy}%
+                    <CheckCircle className="w-3 h-3 mr-1" />
+                    {zones.filter((z) => z.status === "active").length} hoạt
+                    động
                   </p>
                 </div>
-                <TrendingUp className="w-8 h-8 text-green-600" />
+                <MapPin className="w-8 h-8 text-green-600" />
               </div>
             </CardContent>
           </Card>
@@ -374,118 +499,259 @@ export default function WarehouseDetail() {
 
         {/* Main Content Tabs */}
         <Tabs value={selectedTab} onValueChange={setSelectedTab}>
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="overview">Tổng quan</TabsTrigger>
             <TabsTrigger value="zones">Khu vực</TabsTrigger>
-            <TabsTrigger value="operations">Hoạt động</TabsTrigger>
-            <TabsTrigger value="analytics">Phân tích</TabsTrigger>
+            <TabsTrigger value="activities">Hoạt động</TabsTrigger>
+            <TabsTrigger value="performance">Hiệu suất</TabsTrigger>
+            <TabsTrigger value="details">Chi tiết</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="mt-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Capacity Overview */}
+              {/* Warehouse Info */}
               <Card className="lg:col-span-2">
                 <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Building className="w-5 h-5 mr-2" />
-                    Sức chứa kho
-                  </CardTitle>
+                  <CardTitle>Thông tin kho</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">Tổng sức chứa</span>
-                      <span className="text-sm text-muted-foreground">
-                        {data.overview.totalCapacity.toLocaleString()} sản phẩm
-                      </span>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label className="text-sm font-medium text-muted-foreground">
+                          Loại kho
+                        </Label>
+                        <p className="font-medium">Kho phân phối</p>
+                      </div>
+                      <div>
+                        <Label className="text-sm font-medium text-muted-foreground">
+                          Số bến bốc xếp
+                        </Label>
+                        <p className="font-medium">{warehouse.loadingDocks}</p>
+                      </div>
+                      <div>
+                        <Label className="text-sm font-medium text-muted-foreground">
+                          Chiều cao
+                        </Label>
+                        <p className="font-medium">{warehouse.height}m</p>
+                      </div>
+                      <div>
+                        <Label className="text-sm font-medium text-muted-foreground">
+                          Giờ hoạt động
+                        </Label>
+                        <p className="font-medium">
+                          {warehouse.operatingHours.start} -{" "}
+                          {warehouse.operatingHours.end}
+                        </p>
+                      </div>
                     </div>
-                    <Progress
-                      value={data.overview.utilizationRate}
-                      className="h-4"
-                    />
-                    <div className="grid grid-cols-3 gap-4 text-center">
-                      <div className="p-3 bg-green-50 rounded-lg">
-                        <p className="text-lg font-bold text-green-600">
-                          {data.overview.currentStock.toLocaleString()}
-                        </p>
-                        <p className="text-sm text-green-600">Đã sử dụng</p>
-                      </div>
-                      <div className="p-3 bg-blue-50 rounded-lg">
-                        <p className="text-lg font-bold text-blue-600">
-                          {data.overview.availableSpace.toLocaleString()}
-                        </p>
-                        <p className="text-sm text-blue-600">Còn trống</p>
-                      </div>
-                      <div className="p-3 bg-purple-50 rounded-lg">
-                        <p className="text-lg font-bold text-purple-600">
-                          {data.overview.utilizationRate}%
-                        </p>
-                        <p className="text-sm text-purple-600">Tỷ lệ sử dụng</p>
-                      </div>
+
+                    <div>
+                      <Label className="text-sm font-medium text-muted-foreground">
+                        Địa chỉ
+                      </Label>
+                      <p className="font-medium">
+                        {warehouse.address}, {warehouse.ward},{" "}
+                        {warehouse.district}, {warehouse.city}
+                      </p>
+                    </div>
+
+                    <div>
+                      <Label className="text-sm font-medium text-muted-foreground">
+                        Mô tả
+                      </Label>
+                      <p className="text-sm">{warehouse.description}</p>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2">
+                      {warehouse.hasClimateControl && (
+                        <Badge variant="outline" className="text-blue-600">
+                          <Thermometer className="w-3 h-3 mr-1" />
+                          Kiểm soát khí hậu
+                        </Badge>
+                      )}
+                      {warehouse.hasSecurity && (
+                        <Badge variant="outline" className="text-green-600">
+                          <Shield className="w-3 h-3 mr-1" />
+                          An ninh
+                        </Badge>
+                      )}
+                      {warehouse.hasFireSuppression && (
+                        <Badge variant="outline" className="text-red-600">
+                          <AlertTriangle className="w-3 h-3 mr-1" />
+                          Chữa cháy
+                        </Badge>
+                      )}
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Alerts */}
+              {/* Contact Info */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <AlertTriangle className="w-5 h-5 mr-2" />
-                      Cảnh báo
-                    </div>
-                    <Badge variant="destructive">{data.alerts.length}</Badge>
-                  </CardTitle>
+                  <CardTitle>Thông tin liên hệ</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
-                    {data.alerts.map((alert) => (
-                      <div
-                        key={alert.id}
-                        className={`p-3 border-l-4 rounded-r-lg ${getAlertColor(alert.type)}`}
-                      >
-                        <p className="text-sm font-medium">{alert.message}</p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {alert.time}
-                        </p>
+                  <div className="space-y-4">
+                    <div>
+                      <Label className="text-sm font-medium text-muted-foreground">
+                        Quản lý kho
+                      </Label>
+                      <div className="flex items-center space-x-2 mt-1">
+                        <Users className="w-4 h-4 text-muted-foreground" />
+                        <span className="font-medium">{warehouse.manager}</span>
                       </div>
-                    ))}
+                    </div>
+
+                    <div>
+                      <Label className="text-sm font-medium text-muted-foreground">
+                        Điện thoại
+                      </Label>
+                      <div className="flex items-center space-x-2 mt-1">
+                        <Phone className="w-4 h-4 text-muted-foreground" />
+                        <span className="font-medium">
+                          {warehouse.managerPhone}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label className="text-sm font-medium text-muted-foreground">
+                        Email
+                      </Label>
+                      <div className="flex items-center space-x-2 mt-1">
+                        <Mail className="w-4 h-4 text-muted-foreground" />
+                        <span className="font-medium">
+                          {warehouse.managerEmail}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label className="text-sm font-medium text-muted-foreground">
+                        Khẩn cấp
+                      </Label>
+                      <div className="flex items-center space-x-2 mt-1">
+                        <AlertTriangle className="w-4 h-4 text-red-500" />
+                        <span className="font-medium">
+                          {warehouse.emergencyContact}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="pt-4 border-t">
+                      <Button variant="outline" className="w-full" size="sm">
+                        <ExternalLink className="w-4 h-4 mr-2" />
+                        Xem trên bản đồ
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
             </div>
+          </TabsContent>
 
-            {/* Recent Activities */}
-            <Card className="mt-6">
+          <TabsContent value="zones" className="mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {zones.map((zone) => (
+                <Card key={zone.id}>
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-lg">{zone.name}</CardTitle>
+                      <Badge
+                        variant="outline"
+                        className={getStatusColor(zone.status)}
+                      >
+                        {getStatusText(zone.status)}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{zone.type}</p>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {/* Capacity */}
+                      <div>
+                        <div className="flex justify-between text-sm mb-2">
+                          <span>Sức chứa</span>
+                          <span>
+                            {zone.currentStock.toLocaleString()}/
+                            {zone.capacity.toLocaleString()}
+                          </span>
+                        </div>
+                        <Progress
+                          value={(zone.currentStock / zone.capacity) * 100}
+                          className="h-2"
+                        />
+                      </div>
+
+                      {/* Environmental */}
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div className="flex items-center space-x-2">
+                          <Thermometer className="w-4 h-4 text-red-500" />
+                          <div>
+                            <p className="font-medium">{zone.temperature}°C</p>
+                            <p className="text-muted-foreground">Nhiệt độ</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Activity className="w-4 h-4 text-blue-500" />
+                          <div>
+                            <p className="font-medium">{zone.humidity}%</p>
+                            <p className="text-muted-foreground">Độ ẩm</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="pt-2 border-t text-xs text-muted-foreground">
+                        Hoạt động cuối: {zone.lastActivity}
+                      </div>
+
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full"
+                        onClick={() =>
+                          navigate(`/locations/zone/${zone.name.slice(-1)}`)
+                        }
+                      >
+                        <Eye className="w-4 h-4 mr-2" />
+                        Xem chi tiết
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="activities" className="mt-6">
+            <Card>
               <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <Activity className="w-5 h-5 mr-2" />
-                    Hoạt động gần đây
-                  </div>
-                  <Button variant="ghost" size="sm">
-                    <Eye className="w-4 h-4 mr-1" />
-                    Xem tất cả
-                  </Button>
-                </CardTitle>
+                <CardTitle>Hoạt động gần đây</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {data.activities.map((activity) => (
+                  {activities.map((activity) => (
                     <div
                       key={activity.id}
-                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                      className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
                     >
-                      <div className="flex items-center space-x-3">
+                      <div className="flex items-center space-x-4">
                         <div className="p-2 bg-white rounded-full">
                           {getActivityIcon(activity.type)}
                         </div>
                         <div>
-                          <p className="font-medium">{activity.title}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {activity.description}
-                          </p>
+                          <p className="font-medium">{activity.description}</p>
+                          <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                            <span>{activity.zone}</span>
+                            {activity.quantity > 0 && (
+                              <>
+                                <span>•</span>
+                                <span>{activity.quantity} sản phẩm</span>
+                              </>
+                            )}
+                          </div>
                         </div>
                       </div>
                       <div className="text-right">
@@ -493,10 +759,14 @@ export default function WarehouseDetail() {
                           variant="outline"
                           className={getActivityStatusColor(activity.status)}
                         >
-                          {activity.zone}
+                          {activity.status === "completed"
+                            ? "Hoàn thành"
+                            : activity.status === "processing"
+                              ? "Đang xử lý"
+                              : "Đã lên lịch"}
                         </Badge>
                         <p className="text-xs text-muted-foreground mt-1">
-                          {activity.time}
+                          {activity.timestamp}
                         </p>
                       </div>
                     </div>
@@ -506,287 +776,221 @@ export default function WarehouseDetail() {
             </Card>
           </TabsContent>
 
-          <TabsContent value="zones" className="mt-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {data.zones.map((zone) => (
-                <Card key={zone.id} className="relative overflow-hidden">
+          <TabsContent value="performance" className="mt-6">
+            {performance && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <Card>
                   <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
-                      <div className="flex items-center">
-                        <MapPin className="w-5 h-5 mr-2" />
-                        {zone.name}
-                      </div>
-                      <Badge
-                        variant="outline"
-                        className={getZoneStatusColor(zone.status)}
-                      >
-                        {zone.type}
-                      </Badge>
+                    <CardTitle className="flex items-center">
+                      <Calendar className="w-5 h-5 mr-2" />
+                      Hôm nay
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      {/* Capacity */}
-                      <div>
-                        <div className="flex justify-between text-sm mb-2">
-                          <span>Sức chứa</span>
-                          <span>
-                            {zone.current.toLocaleString()}/
-                            {zone.capacity.toLocaleString()}
-                          </span>
-                        </div>
-                        <Progress
-                          value={(zone.current / zone.capacity) * 100}
-                          className="h-2"
-                        />
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">
+                          Nhập kho
+                        </span>
+                        <span className="font-bold">
+                          {performance.today.inbound}
+                        </span>
                       </div>
-
-                      {/* Environmental conditions */}
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="flex items-center space-x-2">
-                          <Thermometer className="w-4 h-4 text-red-500" />
-                          <div>
-                            <p className="text-sm font-medium">
-                              {zone.temperature}°C
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              Nhiệt độ
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Activity className="w-4 h-4 text-blue-500" />
-                          <div>
-                            <p className="text-sm font-medium">
-                              {zone.humidity}%
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              Độ ẩm
-                            </p>
-                          </div>
-                        </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">
+                          Xuất kho
+                        </span>
+                        <span className="font-bold">
+                          {performance.today.outbound}
+                        </span>
                       </div>
-
-                      <div className="pt-4 border-t">
-                        <div className="flex items-center justify-between">
-                          <p className="text-sm text-muted-foreground">
-                            Hoạt động cuối: {zone.lastActivity}
-                          </p>
-                          <Link to={`/locations/zone/${zone.id}`}>
-                            <Button variant="ghost" size="sm">
-                              <Eye className="w-4 h-4 mr-1" />
-                              Chi tiết
-                            </Button>
-                          </Link>
-                        </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">
+                          Chuyển kho
+                        </span>
+                        <span className="font-bold">
+                          {performance.today.transfers}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">
+                          Hiệu suất
+                        </span>
+                        <span className="font-bold text-green-600">
+                          {performance.today.efficiency}%
+                        </span>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
-              ))}
-            </div>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Tuần này</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">
+                          Tổng đơn hàng
+                        </span>
+                        <span className="font-bold">
+                          {performance.thisWeek.totalOrders}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">
+                          Hoàn thành
+                        </span>
+                        <span className="font-bold">
+                          {performance.thisWeek.completedOrders}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">
+                          Độ chính xác
+                        </span>
+                        <span className="font-bold text-green-600">
+                          {performance.thisWeek.accuracy}%
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">
+                          Tỷ lệ sử dụng
+                        </span>
+                        <span className="font-bold">
+                          {performance.thisWeek.utilization}%
+                        </span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Tháng này</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">
+                          Throughput
+                        </span>
+                        <span className="font-bold">
+                          {performance.thisMonth.throughput.toLocaleString()}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">
+                          Thời gian xử lý
+                        </span>
+                        <span className="font-bold">
+                          {performance.thisMonth.avgProcessingTime}h
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">
+                          Hài lòng KH
+                        </span>
+                        <span className="font-bold text-green-600">
+                          {performance.thisMonth.customerSatisfaction}%
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm text-muted-foreground">
+                          Chi phí/đơn vị
+                        </span>
+                        <span className="font-bold">
+                          ${performance.thisMonth.costPerUnit}
+                        </span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
           </TabsContent>
 
-          <TabsContent value="operations" className="mt-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {/* Quick Actions */}
-              <Card className="md:col-span-2 lg:col-span-3">
-                <CardHeader>
-                  <CardTitle>Thao tác nhanh</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <Link to="/inventory/receipt">
-                      <Button
-                        variant="outline"
-                        className="w-full h-20 flex flex-col items-center justify-center"
-                      >
-                        <Package className="w-6 h-6 mb-2" />
-                        <span>Nhập kho</span>
-                      </Button>
-                    </Link>
-                    <Link to="/inventory/outbound">
-                      <Button
-                        variant="outline"
-                        className="w-full h-20 flex flex-col items-center justify-center"
-                      >
-                        <Truck className="w-6 h-6 mb-2" />
-                        <span>Xuất kho</span>
-                      </Button>
-                    </Link>
-                    <Link to="/advanced">
-                      <Button
-                        variant="outline"
-                        className="w-full h-20 flex flex-col items-center justify-center"
-                      >
-                        <ClipboardList className="w-6 h-6 mb-2" />
-                        <span>Picking</span>
-                      </Button>
-                    </Link>
-                    <Link to="/locations">
-                      <Button
-                        variant="outline"
-                        className="w-full h-20 flex flex-col items-center justify-center"
-                      >
-                        <MapPin className="w-6 h-6 mb-2" />
-                        <span>Vị trí</span>
-                      </Button>
-                    </Link>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Today's Performance */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Hiệu suất hôm nay</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex justify-between">
-                      <span className="text-sm">Nhập kho</span>
-                      <span className="font-bold">
-                        {data.performance.today.inbound}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm">Xuất kho</span>
-                      <span className="font-bold">
-                        {data.performance.today.outbound}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm">Picking</span>
-                      <span className="font-bold">
-                        {data.performance.today.picking}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm">Putaway</span>
-                      <span className="font-bold">
-                        {data.performance.today.putaway}
-                      </span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Tuần này</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex justify-between">
-                      <span className="text-sm">Đơn hàng</span>
-                      <span className="font-bold">
-                        {data.performance.thisWeek.orders}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm">Giao hàng</span>
-                      <span className="font-bold">
-                        {data.performance.thisWeek.shipments}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm">Trả hàng</span>
-                      <span className="font-bold">
-                        {data.performance.thisWeek.returns}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm">Hài lòng</span>
-                      <span className="font-bold">
-                        {data.performance.thisWeek.satisfaction}%
-                      </span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="analytics" className="mt-6">
+          <TabsContent value="details" className="mt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Phân tích sức chứa</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-64 flex items-center justify-center text-muted-foreground">
-                    <div className="text-center">
-                      <PieChart className="w-12 h-12 mx-auto mb-2" />
-                      <p>Biểu đồ phân tích sức chứa</p>
-                      <p className="text-sm">(Demo chart placeholder)</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Xu hướng hoạt động</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-64 flex items-center justify-center text-muted-foreground">
-                    <div className="text-center">
-                      <BarChart3 className="w-12 h-12 mx-auto mb-2" />
-                      <p>Biểu đồ xu hướng hoạt động</p>
-                      <p className="text-sm">(Demo chart placeholder)</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Hiệu suất theo zone</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {data.zones.map((zone) => (
-                      <div key={zone.id} className="space-y-2">
-                        <div className="flex justify-between">
-                          <span className="text-sm font-medium">
-                            {zone.name}
-                          </span>
-                          <span className="text-sm">
-                            {((zone.current / zone.capacity) * 100).toFixed(1)}%
-                          </span>
-                        </div>
-                        <Progress
-                          value={(zone.current / zone.capacity) * 100}
-                          className="h-2"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Báo cáo nhanh</CardTitle>
+                  <CardTitle>Thông số kỹ thuật</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    <Button variant="outline" className="w-full justify-start">
-                      <Calendar className="w-4 h-4 mr-2" />
-                      Báo cáo hàng ngày
-                    </Button>
-                    <Button variant="outline" className="w-full justify-start">
-                      <BarChart3 className="w-4 h-4 mr-2" />
-                      Báo cáo hiệu suất
-                    </Button>
-                    <Button variant="outline" className="w-full justify-start">
-                      <Package className="w-4 h-4 mr-2" />
-                      Báo cáo tồn kho
-                    </Button>
-                    <Button variant="outline" className="w-full justify-start">
-                      <TrendingUp className="w-4 h-4 mr-2" />
-                      Báo cáo xu hướng
-                    </Button>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">
+                        Tổng diện tích
+                      </span>
+                      <span className="font-medium">
+                        {warehouse.totalArea.toLocaleString()} m²
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">
+                        Diện tích lưu trữ
+                      </span>
+                      <span className="font-medium">
+                        {warehouse.storageArea.toLocaleString()} m²
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Sức chứa</span>
+                      <span className="font-medium">
+                        {warehouse.capacity.toLocaleString()} sản phẩm
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Chiều cao</span>
+                      <span className="font-medium">{warehouse.height} m</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Bến bốc xếp</span>
+                      <span className="font-medium">
+                        {warehouse.loadingDocks}
+                      </span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Vị trí & Tọa độ</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div>
+                      <Label className="text-sm font-medium text-muted-foreground">
+                        Địa chỉ đầy đủ
+                      </Label>
+                      <p className="font-medium">
+                        {warehouse.address}, {warehouse.ward},{" "}
+                        {warehouse.district}, {warehouse.city},{" "}
+                        {warehouse.country}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-sm font-medium text-muted-foreground">
+                        Mã bưu chính
+                      </Label>
+                      <p className="font-medium">{warehouse.postalCode}</p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label className="text-sm font-medium text-muted-foreground">
+                          Vĩ độ
+                        </Label>
+                        <p className="font-medium">{warehouse.latitude}</p>
+                      </div>
+                      <div>
+                        <Label className="text-sm font-medium text-muted-foreground">
+                          Kinh độ
+                        </Label>
+                        <p className="font-medium">{warehouse.longitude}</p>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -795,5 +999,13 @@ export default function WarehouseDetail() {
         </Tabs>
       </div>
     </>
+  );
+}
+
+function Label({ className, children, ...props }: any) {
+  return (
+    <label className={`text-sm font-medium ${className || ""}`} {...props}>
+      {children}
+    </label>
   );
 }

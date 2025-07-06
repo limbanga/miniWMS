@@ -8,7 +8,6 @@ import {
   Edit,
   Trash2,
   Eye,
-  MapPin,
   Filter,
   Download,
 } from "lucide-react";
@@ -107,8 +106,10 @@ const WarehouseActions = ({ id }: { id: string }) => (
     <DropdownMenuContent align="end">
       <DropdownMenuLabel>Hành động</DropdownMenuLabel>
       <DropdownMenuItem>
-        <Eye className="mr-2 h-4 w-4" />
-        Xem chi tiết
+        <Link to={`/app/warehouses/${id}`} className="flex items-center">
+          <Eye className="mr-2 h-4 w-4" />
+          Xem chi tiết
+        </Link>
       </DropdownMenuItem>
       <DropdownMenuItem asChild>
         <Link to={`/warehouses/edit/${id}`}>
