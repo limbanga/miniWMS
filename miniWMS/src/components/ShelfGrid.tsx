@@ -16,6 +16,7 @@ const shelves = [
         capacity: 100,
         currentStock: 60,
         status: "active",
+        productName: "Sản phẩm A",
       },
       {
         id: "level-1-2",
@@ -24,6 +25,7 @@ const shelves = [
         capacity: 100,
         currentStock: 20,
         status: "maintenance",
+        productName: "Sản phẩm B",
       },
       {
         id: "level-1-3",
@@ -32,6 +34,7 @@ const shelves = [
         capacity: 100,
         currentStock: 0,
         status: "inactive",
+        productName: "Sản phẩm C",
       },
     ] satisfies ShelfLevel[],
   },

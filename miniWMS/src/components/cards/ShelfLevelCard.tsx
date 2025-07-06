@@ -14,6 +14,7 @@ import {
   XCircle,
   Pencil,
   Trash,
+  PackageCheck,
 } from "lucide-react";
 
 interface Props {
@@ -61,6 +62,17 @@ export default function ShelfLevelCard({
         </CardTitle>
       </CardHeader>
       <CardContent className="text-sm space-y-3">
+        {/* Tên sản phẩm */}
+        <div className="flex items-center gap-2 text-muted-foreground">
+          <PackageCheck className="w-4 h-4" />
+          <span>
+            {level.productName
+              ? `Sản phẩm: ${level.productName}`
+              : "Không có sản phẩm"}
+          </span>
+        </div>
+
+        {/* Sức chứa */}
         <div className="flex justify-between">
           <span>Sức chứa:</span>
           <span>
@@ -69,6 +81,7 @@ export default function ShelfLevelCard({
         </div>
         <Progress value={percent} className="h-2" />
 
+        {/* Hành động */}
         <div className="flex justify-end gap-2 pt-2 border-t mt-2">
           <Button
             variant="ghost"
@@ -86,7 +99,6 @@ export default function ShelfLevelCard({
           >
             <Trash className="w-4 h-4 text-red-500" />
           </Button>
-
         </div>
       </CardContent>
     </Card>

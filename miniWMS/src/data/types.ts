@@ -98,4 +98,5 @@ export interface ShelfLevel {
   capacity: number;
   currentStock: number;
   status: "active" | "inactive" | "maintenance";
+  productName?: string; // Optional, if the level is assigned to a specific product
 }
