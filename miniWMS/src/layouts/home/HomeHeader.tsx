@@ -50,7 +50,7 @@ export default function HomeHeader() {
                 Liên hệ ngay
               </Button>
             </Link>
-            <Link to="/dashboard">
+            <Link to="/app">
               <Button className="bg-primary hover:bg-primary/90">
                 Ứng dụng
                 <ArrowRight className="size-4 ml-1" />
