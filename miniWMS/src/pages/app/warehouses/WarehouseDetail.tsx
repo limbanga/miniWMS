@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,9 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  ArrowLeft,
   Edit,
-  Warehouse,
   MapPin,
   Building,
   Thermometer,
@@ -30,6 +28,11 @@ import {
   Printer,
   ExternalLink,
 } from "lucide-react";
+import { PageBreadcrumb } from "@/components/ui/page-breadcrumb";
+import { ZoneCard } from "@/components/cards/ZoneCard";
+import { getStatusColor } from "@/lib/getStatusColor";
+import { getStatusText } from "@/lib/getStatusText";
+import type { Zone } from "@/data/types";
 
 interface WarehouseData {
   id: string;
@@ -67,18 +70,6 @@ interface WarehouseData {
   notes: string;
   createdAt: string;
   updatedAt: string;
-}
-
-interface ZoneData {
-  id: string;
-  name: string;
-  type: string;
-  capacity: number;
-  currentStock: number;
-  temperature: number;
-  humidity: number;
-  status: "active" | "inactive" | "maintenance";
-  lastActivity: string;
 }
 
 interface ActivityData {
@@ -151,11 +142,12 @@ const getSampleWarehouse = (id: string): WarehouseData => ({
   updatedAt: "2024-01-15",
 });
 
-const getSampleZones = (): ZoneData[] => [
+const getSampleZones = (): Zone[] => [
   {
     id: "1",
     name: "Zone A",
     type: "Điện tử",
+    warehouseId: "1",
     capacity: 25000,
     currentStock: 18500,
     temperature: 22,
@@ -166,6 +158,7 @@ const getSampleZones = (): ZoneData[] => [
   {
     id: "2",
     name: "Zone B",
+    warehouseId: "2",
     type: "Văn phòng phẩm",
     capacity: 30000,
     currentStock: 22000,
@@ -178,6 +171,7 @@ const getSampleZones = (): ZoneData[] => [
     id: "3",
     name: "Zone C",
     type: "Thực phẩm",
+    warehouseId: "1",
     capacity: 15000,
     currentStock: 8500,
     temperature: 4,
@@ -192,6 +186,7 @@ const getSampleZones = (): ZoneData[] => [
     capacity: 30000,
     currentStock: 26500,
     temperature: 18,
+    warehouseId: "2",
     humidity: 35,
     status: "active",
     lastActivity: "8 phút trước",
@@ -262,7 +257,7 @@ export default function WarehouseDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [warehouse, setWarehouse] = useState<WarehouseData | null>(null);
-  const [zones, setZones] = useState<ZoneData[]>([]);
+  const [zones, setZones] = useState<Zone[]>([]);
   const [activities, setActivities] = useState<ActivityData[]>([]);
   const [performance, setPerformance] = useState<PerformanceData | null>(null);
   const [selectedTab, setSelectedTab] = useState("overview");
@@ -276,31 +271,7 @@ export default function WarehouseDetail() {
     }
   }, [id]);
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "active":
-        return "bg-green-100 text-green-800 border-green-200";
-      case "inactive":
-        return "bg-gray-100 text-gray-800 border-gray-200";
-      case "maintenance":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      default:
-        return "bg-gray-100 text-gray-800 border-gray-200";
-    }
-  };
 
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case "active":
-        return "Hoạt động";
-      case "inactive":
-        return "Tạm dừng";
-      case "maintenance":
-        return "Bảo trì";
-      default:
-        return status;
-    }
-  };
 
   const getActivityIcon = (type: string) => {
     switch (type) {
@@ -350,24 +321,17 @@ export default function WarehouseDetail() {
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-8">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center mb-4">
-            <Button
-              variant="ghost"
-              onClick={() => navigate("/warehouse")}
-              className="mr-4"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Quay lại
-            </Button>
-            <div className="flex items-center text-sm text-muted-foreground">
-              <Warehouse className="w-4 h-4 mr-1" />
-              <span>Quản lý kho</span>
-              <span className="mx-2">/</span>
-              <span className="text-foreground font-medium">Chi tiết kho</span>
-            </div>
+          <div className="mb-4">
+            <PageBreadcrumb
+              items={[
+                { label: "Trang chủ", href: "/app" },
+                { label: "Kho hàng", href: "/app/warehouses" },
+                { label: "Chi tiết kho", isCurrent: true },
+              ]}
+            />
           </div>
-
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+          {/* Header */}
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between my-6">
             <div>
               <h1 className="text-3xl font-bold text-foreground flex items-center">
                 <Building className="w-8 h-8 mr-3 text-primary" />
@@ -655,72 +619,12 @@ export default function WarehouseDetail() {
           <TabsContent value="zones" className="mt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {zones.map((zone) => (
-                <Card key={zone.id}>
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">{zone.name}</CardTitle>
-                      <Badge
-                        variant="outline"
-                        className={getStatusColor(zone.status)}
-                      >
-                        {getStatusText(zone.status)}
-                      </Badge>
-                    </div>
-                    <p className="text-sm text-muted-foreground">{zone.type}</p>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {/* Capacity */}
-                      <div>
-                        <div className="flex justify-between text-sm mb-2">
-                          <span>Sức chứa</span>
-                          <span>
-                            {zone.currentStock.toLocaleString()}/
-                            {zone.capacity.toLocaleString()}
-                          </span>
-                        </div>
-                        <Progress
-                          value={(zone.currentStock / zone.capacity) * 100}
-                          className="h-2"
-                        />
-                      </div>
+                <Fragment key={zone.id}>
 
-                      {/* Environmental */}
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div className="flex items-center space-x-2">
-                          <Thermometer className="w-4 h-4 text-red-500" />
-                          <div>
-                            <p className="font-medium">{zone.temperature}°C</p>
-                            <p className="text-muted-foreground">Nhiệt độ</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Activity className="w-4 h-4 text-blue-500" />
-                          <div>
-                            <p className="font-medium">{zone.humidity}%</p>
-                            <p className="text-muted-foreground">Độ ẩm</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="pt-2 border-t text-xs text-muted-foreground">
-                        Hoạt động cuối: {zone.lastActivity}
-                      </div>
-
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="w-full"
-                        onClick={() =>
-                          navigate(`/locations/zone/${zone.name.slice(-1)}`)
-                        }
-                      >
-                        <Eye className="w-4 h-4 mr-2" />
-                        Xem chi tiết
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                  <ZoneCard
+                    zone={zone}
+                  />
+                </Fragment>
               ))}
             </div>
           </TabsContent>

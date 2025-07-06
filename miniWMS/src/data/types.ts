@@ -28,3 +28,17 @@ export interface Supplier {
   createdAt: string;
   notes?: string;
 }
+
+
+export interface Zone {
+  id: string;
+  name: string;
+  type: string;
+  warehouseId: string;
+  status: "active" | "inactive" | "maintenance";
+  capacity: number;
+  currentStock: number;
+  temperature: number;
+  humidity: number;
+  lastActivity: string;
+}

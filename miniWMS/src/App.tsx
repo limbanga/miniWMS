@@ -17,6 +17,7 @@ import AddWarehouse from './pages/app/warehouses/AddWarehouse'
 import WarehouseDetail from './pages/app/warehouses/WarehouseDetail'
 import UserCatalog from './pages/app/users/UserCatalog'
 import AddUser from './pages/app/users/AddUser'
+import ZoneDetail from './pages/app/warehouses/zones/ZoneDetail'
 
 
 function App() {
@@ -43,6 +44,8 @@ function App() {
             <Route path='warehouses' element={<WarehouseCatalog />} />
             <Route path="warehouses/add" element={<AddWarehouse />} />
             <Route path="warehouses/:id" element={<WarehouseDetail />} />
+            <Route path="warehouses/:id" element={<WarehouseDetail />} />
+            <Route path="warehouses/:warehouseId/zones/:zoneId" element={<ZoneDetail />} />
 
             {/* <Route path="inventory" element={<Inventory />} /> */}
             <Route path="users" element={<UserCatalog />} />
