@@ -88,7 +88,17 @@ export function ShelfGrid() {
         <TabsContent key={shelf.id} value={shelf.id}>
           {/* Tổng quan kệ */}
           <div className="mb-4 border rounded-md p-4 bg-muted/40">
-            <h3 className="text-lg font-semibold mb-2">{shelf.name}</h3>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold">{shelf.name}</h2>
+              <Button
+                size="sm"
+                onClick={() => alert(`Thêm tầng mới cho ${shelf.name}`)}
+                title="Thêm tầng mới"
+              >
+                <PlusCircle className="w-4 h-4 mr-1" />
+                Thêm tầng mới
+              </Button>
+            </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
               <div>
                 <p className="text-muted-foreground">Tổng số tầng</p>
@@ -113,18 +123,6 @@ export function ShelfGrid() {
                 </p>
               </div>
             </div>
-          </div>
-
-          {/* Nút thêm tầng */}
-          <div className="text-end mb-2">
-            <Button
-              size="sm"
-              onClick={() => alert(`Thêm tầng mới cho ${shelf.name}`)}
-              title="Thêm tầng mới"
-            >
-              <PlusCircle className="w-4 h-4 mr-1" />
-              Thêm tầng mới
-            </Button>
           </div>
 
           {/* Danh sách tầng */}

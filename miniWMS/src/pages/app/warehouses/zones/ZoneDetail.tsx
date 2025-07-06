@@ -20,6 +20,7 @@ import { StatsCard } from "@/components/cards/StatsCard";
 import { PageBreadcrumb } from "@/components/ui/page-breadcrumb";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ShelfGrid } from "@/components/ShelfGrid";
+import AddShelfDialog from "@/components/dialogs/AddShelfDialog";
 
 const mockZones = [
     {
@@ -201,13 +202,7 @@ export default function ZoneDetail() {
                             <CardTitle>
                                 Danh sách kệ trong khu vực
                             </CardTitle>
-                            <Button
-                                onClick={() => alert("Thêm kệ mới")}
-                            >
-                                <Plus className="w-4 h-4 mr-2" />
-                                Thêm kệ mới
-                            </Button>
-
+                            <AddShelfDialog onAddShelf={(data) => console.log("Shelf added:", data)} />
                         </CardHeader>
                         <CardContent>
                             {1 > 0 ? (
