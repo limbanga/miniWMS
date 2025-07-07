@@ -19,6 +19,7 @@ import UserCatalog from './pages/app/users/UserCatalog'
 import AddUser from './pages/app/users/AddUser'
 import ZoneDetail from './pages/app/warehouses/zones/ZoneDetail'
 import Login from './pages/auth/Login'
+import ChatPage from './pages/ai-assistant/ChatPage'
 
 
 function App() {
@@ -49,8 +50,7 @@ function App() {
             <Route path="warehouses/:id" element={<WarehouseDetail />} />
             <Route path="warehouses/:id" element={<WarehouseDetail />} />
             <Route path="warehouses/:warehouseId/zones/:zoneId" element={<ZoneDetail />} />
-
-            {/* <Route path="inventory" element={<Inventory />} /> */}
+            <Route path="ai-assistant" element={<ChatPage />} />
             <Route path="users" element={<UserCatalog />} />
             <Route path="users/add" element={<AddUser />} />
             {/* <Route path="audit" element={<AuditLog />} /> */}

@@ -10,7 +10,7 @@ export default function AppLayout() {
                 <AppSidebar />
                 <div className="transition-all duration-300 w-full ">
                     <AppTopBar />
-                    <main className="pt-16 lg:pt-0 px-5">
+                    <main>
                         <Outlet />
                     </main>
                 </div>
