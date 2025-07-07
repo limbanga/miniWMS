@@ -59,7 +59,7 @@ const getStatusLabel = (status: Receipt["status"]) => {
   }
 };
 
-export default function GoodsReceiptTable({ receipts, onDelete }: Props) {
+export default function ReceiptTable({ receipts, onDelete }: Props) {
   return (
     <Table>
       <TableHeader>

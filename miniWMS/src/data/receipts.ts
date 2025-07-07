@@ -19,7 +19,7 @@ export const sampleReceipts: Receipt[] = [
     status: "completed",
   },
   {
-    id: "r2",
+    id: "r2", 
     code: "PNK-20250702-02",
     supplierName: "Công ty CP XYZ",
     totalItems: 8,

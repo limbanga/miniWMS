@@ -23,6 +23,7 @@ import ChatPage from './pages/app/ai-assistant/ChatPage'
 import AuditLog from './pages/app/audit-logs/AuditLog'
 import ReceiptCatalog from './pages/app/receipts/ReceiptCatalog'
 import AddReceipt from './pages/app/receipts/AddReceipt'
+import ReceiptDetail from './pages/app/receipts/ReceiptDetail'
 
 
 function App() {
@@ -54,6 +55,7 @@ function App() {
             <Route path="warehouses/:warehouseId/zones/:zoneId" element={<ZoneDetail />} />
             <Route path='receipts' element={<ReceiptCatalog />} />
             <Route path="receipts/add" element={<AddReceipt />} />
+            <Route path="receipts/:id" element={<ReceiptDetail />} />
             <Route path="ai-assistant" element={<ChatPage />} />
             <Route path="users" element={<UserCatalog />} />
             <Route path="users/add" element={<AddUser />} />

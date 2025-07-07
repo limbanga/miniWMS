@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { StatsCard } from "@/components/cards/StatsCard";
 import { sampleReceipts, type Receipt } from "@/data/receipts";
-import GoodsReceiptTable from "@/components/tables/ReceiptTable";
+import ReceiptTable from "@/components/tables/ReceiptTable";
 
 export default function ReceiptCatalog() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -89,7 +89,7 @@ export default function ReceiptCatalog() {
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
-            <GoodsReceiptTable receipts={filteredReceipts} />
+            <ReceiptTable receipts={filteredReceipts} />
           </div>
         </CardContent>
       </Card>
