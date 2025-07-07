@@ -20,6 +20,7 @@ import AddUser from './pages/app/users/AddUser'
 import ZoneDetail from './pages/app/warehouses/zones/ZoneDetail'
 import Login from './pages/auth/Login'
 import ChatPage from './pages/ai-assistant/ChatPage'
+import AuditLog from './pages/app/audit-logs/AuditLog'
 
 
 function App() {
@@ -53,8 +54,7 @@ function App() {
             <Route path="ai-assistant" element={<ChatPage />} />
             <Route path="users" element={<UserCatalog />} />
             <Route path="users/add" element={<AddUser />} />
-            {/* <Route path="audit" element={<AuditLog />} /> */}
-            {/* <Route path="advanced" element={<AdvancedFeatures />} /> */}
+            <Route path="audit" element={<AuditLog />} />
             {/* <Route path="qr-demo" element={<QrDemo />} /> */}
 
           </Route>
