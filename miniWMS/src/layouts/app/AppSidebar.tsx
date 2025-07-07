@@ -7,10 +7,10 @@ import {
     FolderOpen,
     UserCog,
     FileText,
-    Zap,
     LogOut,
     Warehouse,
     ArrowLeftFromLine,
+    BotMessageSquare,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -34,8 +34,8 @@ const NAV_ITEMS = [
     { name: "Nhà cung cấp", href: "suppliers", icon: Users },
     { name: "Người dùng", href: "users", icon: UserCog },
     { name: "Nhật ký", href: "audit", icon: FileText },
-    { name: "Nâng cao", href: "advanced", icon: Zap },
-    { name: "QR Demo", href: "qr-demo", icon: QrCode },
+    { name: "Whis AI", href: "ai-assistant", icon: BotMessageSquare  },
+    { name: "Truy vấn QR", href: "qr-code", icon: QrCode },
 ];
 
 function AppSidebar() {

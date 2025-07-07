@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Bell, Search, User } from "lucide-react";
+import { Bell, Search } from "lucide-react";
+import UserDropdown from "./UserDropdown";
 
 export default function AppTopBar() {
     return (
@@ -21,9 +22,7 @@ export default function AppTopBar() {
                 <Button variant="ghost" size="sm">
                     <Bell className="size-4" />
                 </Button>
-                <Button variant="ghost" size="sm">
-                    <User className="size-4" />
-                </Button>
+                <UserDropdown />
             </div>
         </header>
     );
