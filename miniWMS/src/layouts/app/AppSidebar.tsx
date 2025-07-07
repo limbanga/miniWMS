@@ -10,6 +10,7 @@ import {
     Zap,
     LogOut,
     Warehouse,
+    ArrowLeftFromLine,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -85,13 +86,20 @@ function AppSidebar() {
                     <SidebarContent collapsed={collapsed} />
                 </ScrollArea>
                 <Separator />
-                <div className="p-4">
-                    <Link to="/contact">
+                <div className="p-4 space-y-2 flex flex-col">
+                    <Link to="/">
                         <Button variant="secondary" className="w-full justify-start">
-                            <LogOut className="w-4 h-4 mr-2" />
+                            <ArrowLeftFromLine className="size-4 mr-2" />
+                            {!collapsed && <span>Về trang chủ</span>}
+                        </Button>
+                    </Link>
+                    <Link to="/logout">
+                        <Button variant="destructive" className="w-full justify-start">
+                            <LogOut className="size-4 mr-2" />
                             {!collapsed && <span>Đăng xuất</span>}
                         </Button>
                     </Link>
+
                 </div>
             </aside>
         </>
