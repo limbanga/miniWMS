@@ -19,8 +19,10 @@ import UserCatalog from './pages/app/users/UserCatalog'
 import AddUser from './pages/app/users/AddUser'
 import ZoneDetail from './pages/app/warehouses/zones/ZoneDetail'
 import Login from './pages/auth/Login'
-import ChatPage from './pages/ai-assistant/ChatPage'
+import ChatPage from './pages/app/ai-assistant/ChatPage'
 import AuditLog from './pages/app/audit-logs/AuditLog'
+import ReceiptCatalog from './pages/app/receipts/ReceiptCatalog'
+import AddReceipt from './pages/app/receipts/AddReceipt'
 
 
 function App() {
@@ -49,8 +51,9 @@ function App() {
             <Route path='warehouses' element={<WarehouseCatalog />} />
             <Route path="warehouses/add" element={<AddWarehouse />} />
             <Route path="warehouses/:id" element={<WarehouseDetail />} />
-            <Route path="warehouses/:id" element={<WarehouseDetail />} />
             <Route path="warehouses/:warehouseId/zones/:zoneId" element={<ZoneDetail />} />
+            <Route path='receipts' element={<ReceiptCatalog />} />
+            <Route path="receipts/add" element={<AddReceipt />} />
             <Route path="ai-assistant" element={<ChatPage />} />
             <Route path="users" element={<UserCatalog />} />
             <Route path="users/add" element={<AddUser />} />
