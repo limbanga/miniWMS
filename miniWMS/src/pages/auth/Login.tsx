@@ -22,9 +22,12 @@ import {
   Mail,
   Phone,
 } from "lucide-react";
+import { useAuthStore } from "@/stores/auth-store";
 
 export default function Login() {
   const navigate = useNavigate();
+  const loginStore = useAuthStore();
+
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -35,12 +38,11 @@ export default function Login() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  // Auto-fill demo credentials on load
   useEffect(() => {
     const savedCredentials = localStorage.getItem("savedCredentials");
     if (savedCredentials) {
       const parsed = JSON.parse(savedCredentials);
-      setFormData({ ...formData, ...parsed });
+      setFormData((prev) => ({ ...prev, ...parsed }));
     }
   }, []);
 
@@ -51,10 +53,8 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      // Simulate authentication with realistic delay
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      // Demo credentials with enhanced validation
       const validCredentials = [
         {
           username: "admin",
@@ -89,46 +89,36 @@ export default function Login() {
       const user = validCredentials.find(
         (cred) =>
           cred.username === formData.username &&
-          cred.password === formData.password,
+          cred.password === formData.password
       );
 
       if (user) {
-        // Save user info
-        localStorage.setItem(
-          "user",
-          JSON.stringify({
-            username: user.username,
-            role: user.role,
-            name: user.name,
-            permissions: user.permissions,
-            loginTime: new Date().toISOString(),
-          }),
-        );
+        // Gọi store login
+        loginStore.login({
+          id: user.username,
+          username: user.username,
+          email: `${user.username}@example.com`,
+          role: user.role as any,
+          status: "active",
+          lastLogin: new Date().toISOString(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        });
 
-        // Save credentials if remember me is checked
+        // Ghi nhớ nếu chọn rememberMe
         if (formData.rememberMe) {
           localStorage.setItem(
             "savedCredentials",
-            JSON.stringify({
-              username: formData.username,
-              rememberMe: true,
-            }),
+            JSON.stringify({ username: formData.username, rememberMe: true })
           );
         } else {
           localStorage.removeItem("savedCredentials");
         }
 
-        setSuccess("Đăng nh��p thành công!");
+        setSuccess("Đăng nhập thành công!");
 
-        // Redirect based on role
         setTimeout(() => {
-          if (user.role === "admin") {
-            navigate("/warehouse");
-          } else if (user.role === "manager") {
-            navigate("/dashboard");
-          } else {
-            navigate("/products");
-          }
+          navigate("/app", { replace: true });
         }, 1000);
       } else {
         setError("Tên đăng nhập hoặc mật khẩu không đúng");
@@ -176,6 +166,7 @@ export default function Login() {
   ];
 
   return (
+
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
       {/* Background decorations */}
       <div className="absolute inset-0 overflow-hidden">
@@ -223,7 +214,7 @@ export default function Login() {
                   <Shield className="w-5 h-5 text-blue-600" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-800">B��o mật cao</h3>
+                  <h3 className="font-semibold text-gray-800">Bảo mật cao</h3>
                   <p className="text-sm text-gray-600">
                     Phân quyền chi tiết và audit log
                   </p>
@@ -431,3 +422,4 @@ export default function Login() {
     </div>
   );
 }
+
