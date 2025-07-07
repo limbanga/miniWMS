@@ -1,16 +1,4 @@
 // src/types.ts
-
-export interface User {
-  id: string;
-  username: string;
-  email: string;
-  role: "admin" | "manager" | "staff";
-  status: "active" | "inactive" | "suspended";
-  lastLogin: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface Product {
   id: string;
   name: string;

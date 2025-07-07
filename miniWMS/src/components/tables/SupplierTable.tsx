@@ -61,7 +61,7 @@ const getStatusText = (status: Supplier["status"]) => {
     }
 };
 
-export default function SupplierTable({ suppliers, onEdit, onDelete }: Props) {
+export default function SupplierTable({ suppliers, onDelete }: Props) {
     return (
         <Table>
             <TableHeader>

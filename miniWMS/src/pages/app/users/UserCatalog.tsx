@@ -1,129 +1,36 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  User,
+  User as UserIcon,
   Search,
   Plus,
-  MoreHorizontal,
-  Edit,
-  Trash2,
-  Eye,
+
   Filter,
   Download,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
+
 import { StatsCard } from "@/components/cards/StatsCard";
+import { sampleUsers, type User } from "@/data/user";
+import UserTable from "@/components/tables/UserTable";
 
-interface UserRecord {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  status: "active" | "inactive" | "pending";
-  lastLogin: string;
-}
-
-const sampleUsers: UserRecord[] = [
-  {
-    id: "1",
-    name: "Nguyen Van A",
-    email: "a@example.com",
-    role: "Admin",
-    status: "active",
-    lastLogin: "2024-07-01",
-  },
-  {
-    id: "2",
-    name: "Tran Thi B",
-    email: "b@example.com",
-    role: "User",
-    status: "inactive",
-    lastLogin: "2024-06-15",
-  },
-  {
-    id: "3",
-    name: "Le Van C",
-    email: "c@example.com",
-    role: "Moderator",
-    status: "pending",
-    lastLogin: "2024-07-03",
-  },
-];
-
-const statusMap = {
-  active: {
-    label: "Đang hoạt động",
-    className: "bg-green-100 text-green-800 border-green-200",
-  },
-  inactive: {
-    label: "Không hoạt động",
-    className: "bg-red-100 text-red-800 border-red-200",
-  },
-  pending: {
-    label: "Chờ kích hoạt",
-    className: "bg-yellow-100 text-yellow-800 border-yellow-200",
-  },
-};
-
-const UserActions = ({ id }: { id: string }) => (
-  <DropdownMenu>
-    <DropdownMenuTrigger asChild>
-      <Button variant="ghost" className="h-8 w-8 p-0">
-        <MoreHorizontal className="h-4 w-4" />
-      </Button>
-    </DropdownMenuTrigger>
-    <DropdownMenuContent align="end">
-      <DropdownMenuLabel>Hành động</DropdownMenuLabel>
-      <DropdownMenuItem>
-        <Eye className="mr-2 h-4 w-4" />
-        Xem hồ sơ
-      </DropdownMenuItem>
-      <DropdownMenuItem asChild>
-        <Link to={`/users/edit/${id}`}>
-          <Edit className="mr-2 h-4 w-4" />
-          Chỉnh sửa
-        </Link>
-      </DropdownMenuItem>
-      <DropdownMenuSeparator />
-      <DropdownMenuItem className="text-red-600">
-        <Trash2 className="mr-2 h-4 w-4" />
-        Xóa
-      </DropdownMenuItem>
-    </DropdownMenuContent>
-  </DropdownMenu>
-);
 
 export default function UserCatalog() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [users] = useState<UserRecord[]>(sampleUsers);
+
+  const [users] = useState<User[]>(sampleUsers);
 
   const filteredUsers = users.filter((user) =>
-    [user.name, user.email, user.role]
+    [user.username, user.email, user.role]
       .join(" ")
       .toLowerCase()
       .includes(searchTerm.toLowerCase())
@@ -134,7 +41,7 @@ export default function UserCatalog() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold flex items-center">
-            <User className="w-8 h-8 mr-3 text-primary" />
+            <UserIcon className="w-8 h-8 mr-3 text-primary" />
             Danh sách người dùng
           </h1>
           <p className="text-muted-foreground mt-2">
@@ -153,7 +60,7 @@ export default function UserCatalog() {
         <StatsCard
           label="Tổng người dùng"
           value={users.length}
-          icon={<User className="w-8 h-8 text-primary" />}
+          icon={<UserIcon className="w-8 h-8 text-primary" />}
         />
         <StatsCard
           label="Đang hoạt động"
@@ -165,7 +72,7 @@ export default function UserCatalog() {
         />
         <StatsCard
           label="Chờ kích hoạt"
-          value={users.filter((u) => u.status === "pending").length}
+          value={users.filter((u) => u.status === "suspended").length}
           color="text-yellow-600"
           icon={<div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
             <div className="w-3 h-3 bg-yellow-600 rounded-full" />
@@ -203,39 +110,7 @@ export default function UserCatalog() {
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Tên</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Vai trò</TableHead>
-                  <TableHead>Trạng thái</TableHead>
-                  <TableHead>Đăng nhập gần nhất</TableHead>
-                  <TableHead className="text-right">Hành động</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredUsers.map((user) => (
-                  <TableRow key={user.id}>
-                    <TableCell>{user.name}</TableCell>
-                    <TableCell className="font-mono text-sm">{user.email}</TableCell>
-                    <TableCell>{user.role}</TableCell>
-                    <TableCell>
-                      <Badge
-                        variant="outline"
-                        className={statusMap[user.status].className}
-                      >
-                        {statusMap[user.status].label}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{user.lastLogin}</TableCell>
-                    <TableCell className="text-right">
-                      <UserActions id={user.id} />
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            <UserTable users={filteredUsers} />
           </div>
         </CardContent>
       </Card>
