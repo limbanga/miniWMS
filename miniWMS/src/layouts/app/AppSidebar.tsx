@@ -11,6 +11,8 @@ import {
     Warehouse,
     ArrowLeftFromLine,
     BotMessageSquare,
+    PackagePlus,
+    PackageMinus,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -30,11 +32,12 @@ const NAV_ITEMS = [
     { name: "Sản phẩm", href: "products", icon: Package },
     { name: "Danh mục", href: "categories", icon: FolderOpen },
     { name: "Kho hàng", href: "warehouses", icon: Warehouse },
-    { name: "Nhập/Xuất", href: "inventory", icon: RefreshCw },
+    { name: "Phiếu nhập", href: "receipts", icon: PackagePlus },
+    { name: "Phiếu xuất", href: "shipments", icon: PackageMinus },
     { name: "Nhà cung cấp", href: "suppliers", icon: Users },
     { name: "Người dùng", href: "users", icon: UserCog },
     { name: "Nhật ký", href: "audit", icon: FileText },
-    { name: "Whis AI", href: "ai-assistant", icon: BotMessageSquare  },
+    { name: "Whis AI", href: "ai-assistant", icon: BotMessageSquare },
     { name: "Truy vấn QR", href: "qr-code", icon: QrCode },
 ];
 
