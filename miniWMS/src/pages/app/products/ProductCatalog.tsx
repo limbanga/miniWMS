@@ -17,7 +17,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { StatsCard } from "@/components/cards/StatsCard";
 import ProductTable from "@/components/tables/ProductTable";
 import { sampleProducts, type Product } from "@/data/products";
 
@@ -53,47 +52,8 @@ export default function ProductCatalog() {
         </Link>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <StatsCard
-          label="Tổng sản phẩm"
-          value={products.length}
-          icon={<Package className="w-8 h-8 text-primary" />}
-        />
-        <StatsCard
-          label="Đang hoạt động"
-          value={products.filter((p) => p.status === "active").length}
-          color="text-green-600"
-          icon={
-            <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-              <div className="w-3 h-3 bg-green-600 rounded-full" />
-            </div>
-          }
-        />
-        <StatsCard
-          label="Sắp hết hàng"
-          value={products.filter((p) => p.status === "low-stock").length}
-          color="text-yellow-600"
-          icon={
-            <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
-              <div className="w-3 h-3 bg-yellow-600 rounded-full" />
-            </div>
-          }
-        />
-        <StatsCard
-          label="Tổng số lượng"
-          value={products.reduce((sum, p) => sum + p.quantity, 0)}
-          icon={
-            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-              <div className="w-3 h-3 bg-blue-600 rounded-full" />
-            </div>
-          }
-        />
-      </div>
-
       {/* Search */}
-      <Card className="mb-6">
-        <CardContent className="p-6 flex flex-col sm:flex-row gap-4">
+        <div className="py-6 flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
             <Input
@@ -113,8 +73,7 @@ export default function ProductCatalog() {
               Xuất
             </Button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
       {/* Table */}
       <Card>
