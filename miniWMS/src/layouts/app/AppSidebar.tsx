@@ -1,7 +1,6 @@
 import {
     Package,
     BarChart3,
-    RefreshCw,
     QrCode,
     Users,
     FolderOpen,

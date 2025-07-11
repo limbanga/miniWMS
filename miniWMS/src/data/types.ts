@@ -1,18 +1,3 @@
-// src/types.ts
-export interface Product {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-  supplier: string;
-  price: number;
-  stock: number;
-  status: "active" | "inactive" | "discontinued";
-  createdAt: string;
-  updatedAt: string;
-  sku: string; 
-}
-
 export interface Category {
   id: string;
   name: string;
