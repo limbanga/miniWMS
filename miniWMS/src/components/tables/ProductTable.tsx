@@ -26,8 +26,9 @@ import {
     X,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import type { Product } from "@/data/products";
+import { Badge } from "../ui/badge";
 
-// Actions Component
 const ProductActions = ({ id }: { id: string }) => (
     <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -66,16 +67,6 @@ const ProductActions = ({ id }: { id: string }) => (
     </DropdownMenu>
 );
 
-// Product interface đã tối giản
-interface Product {
-    id: string;
-    sku: string;
-    name: string;
-    category: string;
-    unit: string;
-    expirable?: boolean;
-}
-
 interface Props {
     filteredProducts: Product[];
 }
@@ -90,6 +81,7 @@ export default function ProductTable({ filteredProducts }: Props) {
                     <TableHead>Danh mục</TableHead>
                     <TableHead>Đơn vị</TableHead>
                     <TableHead>Có HSD</TableHead>
+                    <TableHead>Thẻ</TableHead>
                     <TableHead className="text-right">Hành động</TableHead>
                 </TableRow>
             </TableHeader>
@@ -103,6 +95,20 @@ export default function ProductTable({ filteredProducts }: Props) {
                         <TableCell>{product.expirable ?
                             <Check className="text-green-600 size-4 inline" /> :
                             <X className="text-red-600 size-4 inline" />}
+                        </TableCell>
+                        <TableCell>
+                            {product.tags?.map((tag) => (
+                                <Badge
+                                    key={tag.id}
+                                    variant="outline"
+                                    className="mr-1 mb-1"
+                                    style={{ 
+                                        color: tag.color,
+                                        borderColor: tag.color }}
+                                >
+                                    {tag.name}
+                                </Badge>
+                            ))}
                         </TableCell>
                         <TableCell className="text-right">
                             <ProductActions id={product.id} />
