@@ -20,14 +20,12 @@ import {
     Eye,
     Edit,
     Trash2,
-    QrCode,
-    FolderOpen,
     Check,
     X,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { Product } from "@/data/products";
-import { Badge } from "../ui/badge";
+import TagBadge from "../badges/TagBadge";
 
 const ProductActions = ({ id }: { id: string }) => (
     <DropdownMenu>
@@ -46,16 +44,6 @@ const ProductActions = ({ id }: { id: string }) => (
                 <Link to={`/products/edit/${id}`}>
                     <Edit className="mr-2 h-4 w-4" />
                     Chỉnh sửa
-                </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-                <QrCode className="mr-2 h-4 w-4" />
-                Tạo QR Code
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-                <Link to="/categories">
-                    <FolderOpen className="mr-2 h-4 w-4" />
-                    Quản lý danh mục
                 </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
@@ -98,16 +86,7 @@ export default function ProductTable({ filteredProducts }: Props) {
                         </TableCell>
                         <TableCell>
                             {product.tags?.map((tag) => (
-                                <Badge
-                                    key={tag.id}
-                                    variant="outline"
-                                    className="mr-1 mb-1"
-                                    style={{ 
-                                        color: tag.color,
-                                        borderColor: tag.color }}
-                                >
-                                    {tag.name}
-                                </Badge>
+                                <TagBadge key={tag.id} tag={tag} className="inline-block mr-1 mb-1" />
                             ))}
                         </TableCell>
                         <TableCell className="text-right">

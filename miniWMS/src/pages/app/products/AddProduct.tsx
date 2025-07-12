@@ -3,7 +3,7 @@ import {
     Controller,
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { productSchema, type ProductFormValues, } from "@/schemas/product";
+import { productSchema, type ProductFormValues, productFormDefaultValues } from "@/schemas/product";
 import { useNavigate } from "react-router-dom";
 
 import { Package, Save } from "lucide-react";
@@ -18,17 +18,9 @@ import { sampleTags } from "@/data/tags";
 import { Checkbox } from "@/components/ui/checkbox";
 import { sampleCategories } from "@/data/categories";
 import { units } from "@/data/units";
+import { PageBreadcrumb } from "@/components/breadcrumbs/page-breadcrumb";
 
 
-const defaultValues: ProductFormValues = {
-    name: "",
-    sku: "",
-    category: "",
-    description: "",
-    unit: "cái",
-    expirable: false,
-    tags: [],
-};
 
 export default function AddProduct() {
     const navigate = useNavigate();
@@ -41,7 +33,7 @@ export default function AddProduct() {
         setValue,
         formState: { errors },
     } = useForm<ProductFormValues>({
-        defaultValues,
+        defaultValues: productFormDefaultValues,
         resolver: zodResolver(productSchema),
     });
 
@@ -49,7 +41,7 @@ export default function AddProduct() {
         setIsSubmitting(true);
         await new Promise((res) => setTimeout(res, 1000)); // Fake API
         console.log("Saved product:", data);
-        navigate("/products", { state: { message: "Thêm thành công!" } });
+        navigate("/app/products", { state: { message: "Thêm thành công!" } });
         setIsSubmitting(false);
     };
 
@@ -65,6 +57,15 @@ export default function AddProduct() {
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
                         <div>
+                            <div className="mb-4">
+                                <PageBreadcrumb
+                                    items={[
+                                        { label: "Trang chủ", href: "/app" },
+                                        { label: "Sản phẩm", href: "/app/products" },
+                                        { label: "Tạo sản phẩm", isCurrent: true },
+                                    ]}
+                                />
+                            </div>
                             <h1 className="text-3xl font-bold text-foreground flex items-center">
                                 <Package className="w-8 h-8 mr-3 text-primary" />
                                 Thêm Sản Phẩm Mới
@@ -162,7 +163,7 @@ export default function AddProduct() {
                                     {...register("expirable")}
                                     className="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary"
                                 />
-                                <Label className="mb-2" htmlFor="expirable">Có Hạn Sử Dụng</Label>
+                                <Label htmlFor="expirable">Có Hạn Sử Dụng</Label>
                             </div>
 
                             <div>
@@ -171,7 +172,7 @@ export default function AddProduct() {
                                     control={control}
                                     name="tags"
                                     render={({ field }) => (
-                                        <div className="space-y-2 border rounded-md px-3 py-2">
+                                        <div className="space-y-2">
                                             {sampleTags.map((tag) => {
                                                 const isChecked = field.value?.some((t) => t.id === tag.id);
 

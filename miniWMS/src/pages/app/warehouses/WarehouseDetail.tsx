@@ -21,14 +21,13 @@ import {
   Activity,
   TrendingUp,
   BarChart3,
-  Eye,
   Settings,
   Download,
   Share2,
   Printer,
   ExternalLink,
 } from "lucide-react";
-import { PageBreadcrumb } from "@/components/ui/page-breadcrumb";
+import { PageBreadcrumb } from "@/components/breadcrumbs/page-breadcrumb";
 import { ZoneCard } from "@/components/cards/ZoneCard";
 import { getStatusColor } from "@/lib/getStatusColor";
 import { getStatusText } from "@/lib/getStatusText";

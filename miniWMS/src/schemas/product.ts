@@ -13,3 +13,20 @@ export const productSchema = z.object({
 })
 
 export type ProductFormValues = z.infer<typeof productSchema>;
+
+
+export const productFormDefaultValues: ProductFormValues = {
+  name: "",
+  sku: "",
+  category: "",
+  description: "",
+  unit: "cái",
+  expirable: false,
+  tags: [
+    { id: "1" },
+    { id: "2" },
+    { id: "3" },
+    { id: "4" },
+    { id: "5" },
+  ],
+};
