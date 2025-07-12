@@ -14,11 +14,10 @@ export const predefinedColors = [
   "#EC4899", // Pink
   "#6B7280", // Gray
 ];
-
 export const sampleCategories: Category[] = [
   {
     id: "1",
-    name: "Electronics",
+    name: "Thiết bị điện tử",
     description: "Thiết bị điện tử và công nghệ",
     color: "#3B82F6",
     productCount: 45,
@@ -28,7 +27,7 @@ export const sampleCategories: Category[] = [
   },
   {
     id: "2",
-    name: "Office Supplies",
+    name: "Văn phòng phẩm",
     description: "Văn phòng phẩm và thiết bị văn phòng",
     color: "#10B981",
     productCount: 128,
@@ -38,7 +37,7 @@ export const sampleCategories: Category[] = [
   },
   {
     id: "3",
-    name: "Furniture",
+    name: "Nội thất",
     description: "Nội thất văn phòng và gia đình",
     color: "#F59E0B",
     productCount: 67,
@@ -48,7 +47,7 @@ export const sampleCategories: Category[] = [
   },
   {
     id: "4",
-    name: "Security",
+    name: "An ninh",
     description: "Thiết bị an ninh và bảo mật",
     color: "#EF4444",
     productCount: 23,
@@ -58,7 +57,7 @@ export const sampleCategories: Category[] = [
   },
   {
     id: "5",
-    name: "Books",
+    name: "Sách",
     description: "Sách và tài liệu",
     color: "#8B5CF6",
     productCount: 89,

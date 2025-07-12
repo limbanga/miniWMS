@@ -14,26 +14,20 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { sampleTags } from "@/data/tags";
+import { Checkbox } from "@/components/ui/checkbox";
+import { sampleCategories } from "@/data/categories";
+import { units } from "@/data/units";
 
-const categories = ["Electronics", "Office Supplies", "Furniture", "Security"];
-const units = ["cái", "thùng", "kg", "lít"];
 
 const defaultValues: ProductFormValues = {
     name: "",
     sku: "",
     category: "",
     description: "",
-    quantity: 0,
     unit: "cái",
-    minStock: 5,
-    maxStock: 100,
-    costPrice: 0,
-    sellingPrice: 0,
-    barcode: "",
-    weight: 0,
-    dimensions: { length: 0, width: 0, height: 0 },
-    expiryDate: "",
-    notes: "",
+    expirable: false,
+    tags: [],
 };
 
 export default function AddProduct() {
@@ -93,12 +87,12 @@ export default function AddProduct() {
                     <CardContent className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <Label htmlFor="name">Tên sản phẩm</Label>
+                                <Label className="mb-2" htmlFor="name">Tên sản phẩm</Label>
                                 <Input {...register("name")} placeholder="VD: Laptop Dell" />
                                 {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
                             </div>
                             <div>
-                                <Label htmlFor="sku">Mã SKU</Label>
+                                <Label className="mb-2" htmlFor="sku">Mã SKU</Label>
                                 <div className="flex gap-2">
                                     <Input {...register("sku")} />
                                     <Button type="button" onClick={generateSKU} variant="outline">Tự động</Button>
@@ -107,7 +101,7 @@ export default function AddProduct() {
                             </div>
 
                             <div>
-                                <Label>Danh mục</Label>
+                                <Label className="mb-2">Danh mục</Label>
                                 <Controller
                                     control={control}
                                     name="category"
@@ -117,7 +111,7 @@ export default function AddProduct() {
                                                 <SelectValue placeholder="Chọn danh mục" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {categories.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                                                {sampleCategories.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
                                             </SelectContent>
                                         </Select>
                                     )}
@@ -126,7 +120,7 @@ export default function AddProduct() {
                             </div>
 
                             <div>
-                                <Label>Đơn vị</Label>
+                                <Label className="mb-2">Đơn vị</Label>
                                 <Controller
                                     control={control}
                                     name="unit"
@@ -145,7 +139,7 @@ export default function AddProduct() {
                         </div>
 
                         <div>
-                            <Label>Mô tả</Label>
+                            <Label className="mb-2">Mô tả</Label>
                             <Textarea rows={3} {...register("description")} />
                         </div>
 
@@ -157,64 +151,61 @@ export default function AddProduct() {
                     <CardHeader>
                         <CardTitle>
                             <Package className="w-5 h-5 mr-2 inline-block" />
-                            Thông tin vật lý
+                            Các tùy chọn khác
                         </CardTitle>
+
+                        <CardContent className="space-y-4">
+                            <div className="flex items-center space-x-2">
+                                <input
+                                    type="checkbox"
+                                    id="expirable"
+                                    {...register("expirable")}
+                                    className="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary"
+                                />
+                                <Label className="mb-2" htmlFor="expirable">Có Hạn Sử Dụng</Label>
+                            </div>
+
+                            <div>
+                                <Label className="mb-2">Thẻ (Tags)</Label>
+                                <Controller
+                                    control={control}
+                                    name="tags"
+                                    render={({ field }) => (
+                                        <div className="space-y-2 border rounded-md px-3 py-2">
+                                            {sampleTags.map((tag) => {
+                                                const isChecked = field.value?.some((t) => t.id === tag.id);
+
+                                                const handleChange = (checked: boolean) => {
+                                                    if (checked) {
+                                                        field.onChange([...(field.value || []), tag]);
+                                                    } else {
+                                                        field.onChange(field.value?.filter((t) => t.id !== tag.id));
+                                                    }
+                                                };
+
+                                                return (
+                                                    <div key={tag.id} className="flex items-center space-x-2">
+                                                        <Checkbox
+                                                            id={`tag-${tag.id}`}
+                                                            checked={isChecked}
+                                                            onCheckedChange={handleChange}
+                                                        />
+                                                        <Label htmlFor={`tag-${tag.id}`} className="cursor-pointer">
+                                                            {tag.name}
+                                                        </Label>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+                                />
+                                {errors.tags && <p className="text-red-500 text-sm">{errors.tags.message}</p>}
+                            </div>
+
+                        </CardContent>
+
                     </CardHeader>
-                    <CardContent className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <Label htmlFor="weight">Khối lượng (kg)</Label>
-                                <Input
-                                    type="number"
-                                    step="0.01"
-                                    {...register("weight", { valueAsNumber: true })}
-                                    placeholder="VD: 1.5"
-                                />
-                                {errors.weight && (
-                                    <p className="text-red-500 text-sm">{errors.weight.message}</p>
-                                )}
-                            </div>
 
-                            <div>
-                                <Label htmlFor="dimensions.length">Chiều dài (cm)</Label>
-                                <Input
-                                    type="number"
-                                    step="0.1"
-                                    {...register("dimensions.length", { valueAsNumber: true })}
-                                    placeholder="VD: 30"
-                                />
-                                {errors.dimensions?.length && (
-                                    <p className="text-red-500 text-sm">{errors.dimensions.length.message}</p>
-                                )}
-                            </div>
-
-                            <div>
-                                <Label htmlFor="dimensions.width">Chiều rộng (cm)</Label>
-                                <Input
-                                    type="number"
-                                    step="0.1"
-                                    {...register("dimensions.width", { valueAsNumber: true })}
-                                    placeholder="VD: 20"
-                                />
-                                {errors.dimensions?.width && (
-                                    <p className="text-red-500 text-sm">{errors.dimensions.width.message}</p>
-                                )}
-                            </div>
-
-                            <div>
-                                <Label htmlFor="dimensions.height">Chiều cao (cm)</Label>
-                                <Input
-                                    type="number"
-                                    step="0.1"
-                                    {...register("dimensions.height", { valueAsNumber: true })}
-                                    placeholder="VD: 5"
-                                />
-                                {errors.dimensions?.height && (
-                                    <p className="text-red-500 text-sm">{errors.dimensions.height.message}</p>
-                                )}
-                            </div>
-                        </div>
-                    </CardContent>
                 </Card>
 
                 <div className="flex justify-end">
