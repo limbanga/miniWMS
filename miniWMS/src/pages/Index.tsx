@@ -18,6 +18,7 @@ import {
     Smartphone,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import FloatingChatButton from "@/components/buttons/FloatingChatButton";
 
 const features = [
     {
@@ -95,6 +96,7 @@ const stats = [
 ];
 
 export default function Index() {
+    
     return (
         <>
             {/* Hero Section */}
@@ -252,6 +254,7 @@ export default function Index() {
                     </div>
                 </div>
             </section>
+            <FloatingChatButton />
         </>
     );
 }
