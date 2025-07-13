@@ -61,6 +61,7 @@ export default function TagTable({ filteredTags }: Props) {
     <Table>
       <TableHeader>
         <TableRow>
+          <TableHead >Màu</TableHead>
           <TableHead>Tên thẻ</TableHead>
           <TableHead>Mô tả</TableHead>
           <TableHead className="text-right">Hành động</TableHead>
@@ -69,6 +70,12 @@ export default function TagTable({ filteredTags }: Props) {
       <TableBody>
         {filteredTags.map((tag) => (
           <TableRow key={tag.id}>
+            <TableCell>
+              <span
+                className="inline-block w-4 h-4 rounded-full"
+                style={{ backgroundColor: tag.color || "#ccc" }}
+              ></span>
+            </TableCell>
             <TableCell className="font-medium">{tag.name}</TableCell>
             <TableCell>{tag.description || "—"}</TableCell>
             <TableCell className="text-right">
