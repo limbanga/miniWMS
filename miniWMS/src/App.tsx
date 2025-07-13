@@ -24,6 +24,8 @@ import AuditLog from './pages/app/audit-logs/AuditLog'
 import ReceiptCatalog from './pages/app/receipts/ReceiptCatalog'
 import AddReceipt from './pages/app/receipts/AddReceipt'
 import ReceiptDetail from './pages/app/receipts/ReceiptDetail'
+import TagCatalog from './pages/app/tags/TagCatalog'
+import AddTag from './pages/app/tags/AddTag'
 
 
 function App() {
@@ -46,6 +48,8 @@ function App() {
               <Route path="add" element={<AddProduct />} />
             </Route>
             <Route path="categories" element={<Categories />} />
+            <Route path="tags" element={<TagCatalog />} />
+            <Route path="tags/add" element={<AddTag />} />
 
             <Route path="suppliers" element={<Suppliers />} />
             <Route path="suppliers/add" element={<AddSupplier />} />

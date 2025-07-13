@@ -12,6 +12,7 @@ import {
     BotMessageSquare,
     PackagePlus,
     PackageMinus,
+    Tag,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -30,6 +31,7 @@ const NAV_ITEMS = [
     { name: "Dashboard", href: "", icon: BarChart3 },
     { name: "Sản phẩm", href: "products", icon: Package },
     { name: "Danh mục", href: "categories", icon: FolderOpen },
+    { name: "Thẻ", href: "tags", icon: Tag },
     { name: "Kho hàng", href: "warehouses", icon: Warehouse },
     { name: "Phiếu nhập", href: "receipts", icon: PackagePlus },
     { name: "Phiếu xuất", href: "shipments", icon: PackageMinus },

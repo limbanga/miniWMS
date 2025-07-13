@@ -2,6 +2,7 @@ export interface Tag {
   id: string;
   name: string;         // Tên tag hiển thị, ví dụ: "Bảo quản lạnh"
   color?: string;       // Màu để hiển thị UI badge (tuỳ chọn)
+  description?: string; // Mô tả ngắn về tag (tuỳ chọn)
 }
 
 export const sampleTags: Tag[] = [
