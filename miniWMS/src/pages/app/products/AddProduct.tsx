@@ -15,10 +15,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { sampleTags } from "@/data/tags";
-import { Checkbox } from "@/components/ui/checkbox";
 import { sampleCategories } from "@/data/categories";
 import { units } from "@/data/units";
 import { PageBreadcrumb } from "@/components/breadcrumbs/page-breadcrumb";
+import TagBadge from "@/components/badges/TagBadge";
 
 
 
@@ -137,6 +137,15 @@ export default function AddProduct() {
                                     )}
                                 />
                             </div>
+                            <div className="flex items-center space-x-2">
+                                <input
+                                    type="checkbox"
+                                    id="expirable"
+                                    {...register("expirable")}
+                                    className="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary"
+                                />
+                                <Label htmlFor="expirable">Có Hạn Sử Dụng</Label>
+                            </div>
                         </div>
 
                         <div>
@@ -150,57 +159,29 @@ export default function AddProduct() {
 
                 <Card>
                     <CardHeader>
-                        <CardTitle>
-                            <Package className="w-5 h-5 mr-2 inline-block" />
-                            Các tùy chọn khác
+                        <CardTitle className="flex items-center justify-between">
+                            <div>
+                                <Package className="w-5 h-5 mr-2 inline-block" />
+                                Các thẻ (Tags)
+                            </div>
+                            <Button size="sm" onClick={() => navigate("/app/products/tags/add")}>
+                                Thêm thẻ mới
+                            </Button>
                         </CardTitle>
 
-                        <CardContent className="space-y-4">
-                            <div className="flex items-center space-x-2">
-                                <input
-                                    type="checkbox"
-                                    id="expirable"
-                                    {...register("expirable")}
-                                    className="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary"
-                                />
-                                <Label htmlFor="expirable">Có Hạn Sử Dụng</Label>
+                        <CardContent className="space-y-4 p-0">
+                            <h6 className="text-muted-foreground">
+                                Thêm các thẻ để đánh dấu loại sản phẩm
+                            </h6>
+                            <Label className="mb-2">Thẻ đã chọn</Label>
+                            <div className="flex flex-wrap gap-2">
+                                {sampleTags.slice(0, 4).map((tag) => <TagBadge key={tag.id} tag={tag} />)}
                             </div>
 
-                            <div>
-                                <Label className="mb-2">Thẻ (Tags)</Label>
-                                <Controller
-                                    control={control}
-                                    name="tags"
-                                    render={({ field }) => (
-                                        <div className="space-y-2">
-                                            {sampleTags.map((tag) => {
-                                                const isChecked = field.value?.some((t) => t.id === tag.id);
+                            <Label className="mb-2">Chọn thẻ</Label>
 
-                                                const handleChange = (checked: boolean) => {
-                                                    if (checked) {
-                                                        field.onChange([...(field.value || []), tag]);
-                                                    } else {
-                                                        field.onChange(field.value?.filter((t) => t.id !== tag.id));
-                                                    }
-                                                };
-
-                                                return (
-                                                    <div key={tag.id} className="flex items-center space-x-2">
-                                                        <Checkbox
-                                                            id={`tag-${tag.id}`}
-                                                            checked={isChecked}
-                                                            onCheckedChange={handleChange}
-                                                        />
-                                                        <Label htmlFor={`tag-${tag.id}`} className="cursor-pointer">
-                                                            {tag.name}
-                                                        </Label>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                    )}
-                                />
-                                {errors.tags && <p className="text-red-500 text-sm">{errors.tags.message}</p>}
+                            <div className="flex flex-wrap gap-2">
+                                {sampleTags.slice(4, sampleTags.length).map((tag) => <TagBadge key={tag.id} tag={tag} />)}
                             </div>
 
                         </CardContent>
